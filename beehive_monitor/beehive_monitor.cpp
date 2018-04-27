@@ -8,6 +8,8 @@
 #include <Arduino.h>
 #include "TeensyThreads.h"
 
+#include <vector>
+
 //***************** Teensy Pins *****************
 // default led pin
 const int ledPin = 13;
@@ -18,10 +20,12 @@ const int pResistor2 = 32;
 void setup() {
 	pinMode(pResistor1, INPUT);
 	pinMode(pResistor2, INPUT);
-	attachInterrupt(pResistor1, monitorResistence, LOW);
-	attachInterrupt(pResistor2, monitorResistence, LOW);
-	Serial.begin(9600);
+	attachInterrupt(pResistor1, isBlocked, FALLING);
+	attachInterrupt(pResistor1, isNotBlocked, RISING);
+	Serial.begin(9600);	// 57600
 }
+
+
 
 void loop() {
 

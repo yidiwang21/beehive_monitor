@@ -4,10 +4,19 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+computeMean	beehive_monitor/pResistor.cpp	/^double computeMean(vector<int> &v) {$/;"	f
+computeVar	beehive_monitor/pResistor.cpp	/^double computeVar(vector<int> &v, double mean) {$/;"	f
+isBlocked	beehive_monitor/pResistor.cpp	/^void isBlocked() {$/;"	f
+isNotBlocked	beehive_monitor/pResistor.cpp	/^void isNotBlocked() {$/;"	f
 ledPin	beehive_monitor/beehive_monitor.cpp	/^const int ledPin = 13;$/;"	v
 loop	beehive_monitor/beehive_monitor.cpp	/^void loop() {$/;"	f
-monitorResistence	beehive_monitor/pResistor.cpp	/^void monitorResistence() {$/;"	f
+new_pResistorReading	beehive_monitor/pResistor.cpp	/^volatile int new_pResistorReading = 0;$/;"	v
+pReadings	beehive_monitor/pResistor.cpp	/^vector<int> pReadings;$/;"	v
 pResistor1	beehive_monitor/beehive_monitor.cpp	/^const int pResistor1 = 31;$/;"	v
 pResistor2	beehive_monitor/beehive_monitor.cpp	/^const int pResistor2 = 32;$/;"	v
 readPhotoResistors	beehive_monitor/pResistor.cpp	/^int readPhotoResistors(const int pResistor_pin) {$/;"	f
 setup	beehive_monitor/beehive_monitor.cpp	/^void setup() {$/;"	f
+t1	beehive_monitor/pResistor.cpp	/^int t1 = 0, t2 = 0;$/;"	v
+t2	beehive_monitor/pResistor.cpp	/^int t1 = 0, t2 = 0;$/;"	v
+t_dur	beehive_monitor/pResistor.cpp	/^const int t_dur = 100;		\/\/ FIXME$/;"	v
+var_thresh	beehive_monitor/pResistor.cpp	/^const double var_thresh = 100;	\/\/ FIXME$/;"	v
