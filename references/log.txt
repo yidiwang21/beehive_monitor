@@ -1,2 +1,6 @@
-Fast sampling from analog input:
-http://yaab-arduino.blogspot.com/2015/02/fast-sampling-from-analog-input.html
+04/27
+1. add photoresistors sampling
+2. redesign photoresistors array
+3. need to send data
+4. need to test
+5. need to estimate possibility and traffic 

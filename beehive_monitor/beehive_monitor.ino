@@ -1,6 +1,6 @@
 /*
  *
- * beehive_monitor.cpp
+ * beehive_monitor.ino
  * Description: this page includes pins, setup, and the main loop
  * Created on Apr 26, 2018
  *
@@ -15,34 +15,14 @@
 ADC *adc = new ADC();	// adc object
 
 //***************** Variables *******************
-struct PhotoResistors {
-	const int pin;	// photoresistors pin
-	double vol;
-	double res;
-	double res_log;
-};
-
-struct PhotoResistors pResistor[pResistor_UNIT_NUM] = {
-	{31, 0.0, 0.0, 0.0},
-	{32, 0.0, 0.0, 0.0},
-	{33, 0.0, 0.0, 0.0},
-};
-
-struct PhotoResistors prev_pResistor[pResistor_UNIT_NUM] = {
-	{31, 0.0, 0.0, 0.0},
-	{32, 0.0, 0.0, 0.0},
-	{33, 0.0, 0.0, 0.0},
-};
-
-double res_sum = 0.0;
-double diff_sum = 0.0;
 
 //***************** Teensy Pins *****************
 const int ledPin = 13;	// default led pin
-// const int pResistor1 = 31;
-// const int pResistor2 = 32;
-// const int pResistor3 = 33;
-
+/* photoresistors pins already defined in pResistor.ino
+const int pResistor1 = 31;
+const int pResistor2 = 32;
+const int pResistor3 = 33;
+*/
 void setup() {
 //****************** Pin Mode *******************
 	pinMode(pResistor[0].pin, INPUT);

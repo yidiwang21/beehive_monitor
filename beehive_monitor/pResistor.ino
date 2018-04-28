@@ -1,7 +1,7 @@
 /*
 *
-* pResistor.cpp
-* Description: this page analyze the data gotten from photoresistors
+* pResistor.ino
+* Description: this page analyze the data from photoresistors
 * Created on Apr 26, 2018
 *
 * bigger adc reading, more blocked
@@ -12,9 +12,33 @@
 Pin 	o-----------.
 -------------------------------------
 */
+//****************** structs ********************
+struct PhotoResistors {
+	const int pin;	// photoresistors pin
+	double vol;
+	double res;
+	double res_log;
+};
+
+struct PhotoResistors pResistor[pResistor_UNIT_NUM] = {
+	{31, 0.0, 0.0, 0.0},
+	{32, 0.0, 0.0, 0.0},
+	{33, 0.0, 0.0, 0.0},
+};
+
+struct PhotoResistors prev_pResistor[pResistor_UNIT_NUM] = {
+	{31, 0.0, 0.0, 0.0},
+	{32, 0.0, 0.0, 0.0},
+	{33, 0.0, 0.0, 0.0},
+};
+
+//***************** Variables *******************
+double res_sum = 0.0;
+double diff_sum = 0.0;
 const double R_ref = 100000;	// FIXME
 const double var_thresh = 100;	// FIXME
 
+//***************** Functions *******************
 int computeTraffic(void) {
 	return (int)res_sum % 5;
 }

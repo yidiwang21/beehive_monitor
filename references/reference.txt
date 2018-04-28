@@ -1,0 +1,2 @@
+Fast sampling from analog input:
+http://yaab-arduino.blogspot.com/2015/02/fast-sampling-from-analog-input.html
