@@ -47,5 +47,7 @@ void setup() {
 }
 
 void loop() {
-	pResistorMonitor();
+	while (true) {
+		pResistorMonitor();
+	}
 }

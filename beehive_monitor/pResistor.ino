@@ -99,11 +99,9 @@ void judgeTraffic(void) {
 }
 
 void pResistorMonitor(void) {
-	while (true) {
-		delay(1000);
-		updateReadings();
-		int traffic = computeTraffic();
-		// TODO: send data
-		// traffic, resistence, possibility,
-	}
+	delay(1000);
+	updateReadings();
+	int traffic = computeTraffic();
+	// TODO: send data
+	// traffic, resistence, possibility,
 }
