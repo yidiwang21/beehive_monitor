@@ -103,5 +103,5 @@ void pResistorMonitor(void) {
 	updateReadings();
 	int traffic = computeTraffic();
 	// TODO: send data
-	// traffic, resistence, possibility,
+	// traffic, diff_value, resistence, possibility,
 }
