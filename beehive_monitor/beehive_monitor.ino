@@ -43,7 +43,7 @@ struct PhotoResistors prev_pResistor[pResistor_UNIT_NUM] = {
 };
 
 //***************** Teensy Pins *****************
-const int ledPin = 13;	// default led pin
+// const int ledPin = 13;	// default led pin
 /* photoresistors pins already defined in pResistor.ino
 const int pResistor1 = 31;
 const int pResistor2 = 32;
@@ -62,13 +62,15 @@ void setup() {
 	pinMode(pResistor[0].pin, INPUT);
  	pinMode(pResistor[1].pin, INPUT);
  	pinMode(pResistor[2].pin, INPUT);
+	// attachInterrupt(audioRecorder, test_isr, FALLING);
 //***************** ADC Setups ******************
-	///// ADC0 ////
-    adc->setAveraging(16); // set number of averages
-    adc->setResolution(16); // set bits of resolution
-    adc->setConversionSpeed(ADC_CONVERSION_SPEED::VERY_LOW_SPEED); // change the conversion speed
-    adc->setSamplingSpeed(ADC_SAMPLING_SPEED::MED_SPEED); // change the sampling speed
-    ////// ADC1 /////
+	// ///// ADC0 ////
+    // adc->setAveraging(16); // set number of averages
+    // adc->setResolution(16); // set bits of resolution
+    // adc->setConversionSpeed(ADC_CONVERSION_SPEED::VERY_LOW_SPEED); // change the conversion speed
+    // adc->setSamplingSpeed(ADC_SAMPLING_SPEED::MED_SPEED); // change the sampling speed
+    // ADC1 /////
+	// use adc1 to resolve adc0 audio input conflict
     #if ADC_NUM_ADCS > 1
     adc->setAveraging(16, ADC_1); // set number of averages
     adc->setResolution(16, ADC_1); // set bits of resolution
@@ -79,7 +81,7 @@ void setup() {
 	SPI.setMOSI(SDCARD_MOSI_PIN);
 	SPI.setSCK(SDCARD_SCK_PIN);
 	if (!(SD.begin(SDCARD_CS_PIN))) {	// stop here if no SD card, but print a message
-    	while (1) {
+    	while (true) {
       		Serial.println("Unable to access the SD card!");
 			delay(100);
     	}
@@ -93,10 +95,5 @@ void setup() {
 }
 
 void loop() {
-	// pResistorMonitor();
-	startRecording();
-	if(millis() > 20000 && recordingMode == 1) {
-		stopRecording();
-		delay(2000);
-	}
+	audioRecording();
 }

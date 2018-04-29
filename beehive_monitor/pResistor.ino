@@ -54,8 +54,8 @@ double computeDiffAbs(double a, double b) {
 void updateReadings(void) {
 	int value = 0;
 	for (int i = 0; i < pResistor_UNIT_NUM; i++) {
-		value = adc->adc0->analogRead(pResistor[i].pin); // read a new value, will return ADC_ERROR_VALUE if the comparison is false
-		pResistor[i].vol = value * 3.3 / adc->getMaxValue(ADC_0);
+		value = adc->analogRead(pResistor[i].pin, ADC_1); // read a new value, will return ADC_ERROR_VALUE if the comparison is false
+		pResistor[i].vol = value * 3.3 / adc->getMaxValue(ADC_1);
 		pResistor[i].res = vol2Res(pResistor[i].vol);
 		pResistor[i].res_log = log10(pResistor[i].res);
 		Serial.print(i);
