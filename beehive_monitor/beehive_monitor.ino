@@ -93,11 +93,10 @@ void setup() {
 }
 
 void loop() {
-	while (true) {
-		// pResistorMonitor();
-		startRecording();
-		if(millis() > 20000 && recordingMode == 1)
-			stopRecording();
-			delay(2000);
+	// pResistorMonitor();
+	startRecording();
+	if(millis() > 20000 && recordingMode == 1) {
+		stopRecording();
+		delay(2000);
 	}
 }
