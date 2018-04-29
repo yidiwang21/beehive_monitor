@@ -3,4 +3,9 @@
 2. redesign photoresistors array
 3. need to send data
 4. need to test
-5. need to estimate possibility and traffic 
+5. need to estimate possibility and traffic
+
+04/28
+1. add audio recording, but the microphone didn't work
+2. add sd card
+2. use Teensy audio lib design tool
