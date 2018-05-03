@@ -82,5 +82,6 @@ void audioRecording(void) {
             break;
         }else continueRecording();
     }
-    delay(2000);
+    Serial.println("unplug");
+    delay(5000);
 }

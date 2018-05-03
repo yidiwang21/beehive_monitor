@@ -14,10 +14,9 @@
 #include <SPI.h>
 #include <SD.h>
 #include <SerialFlash.h>
+#include <SoftwareSerial.h>
 
 #define pResistor_UNIT_NUM 3	// FIXME: for testing
-
-ADC *adc = new ADC();	// adc object
 
 //***************** Variables *******************
 int recordingMode = 0;  // status: 0 = stop, 1 = recording
@@ -56,8 +55,16 @@ const int SDCARD_CS_PIN = BUILTIN_SDCARD;	// 254?
 const int SDCARD_MOSI_PIN = 11;
 const int SDCARD_SCK_PIN = 13;
 
+const int BT_RX = 0;
+const int BT_TX = 1;
+
+//***************** objects *****************
+ADC *adc = new ADC();	// adc object
+SoftwareSerial Bluetooth(BT_RX, BT_TX);	// RX, TX
+
 void setup() {
 	Serial.begin(9600);	// 57600
+	Bluetooth.begin(115200);
 //****************** Pin Mode *******************
 	pinMode(pResistor[0].pin, INPUT);
  	pinMode(pResistor[1].pin, INPUT);
@@ -95,5 +102,6 @@ void setup() {
 }
 
 void loop() {
-	audioRecording();
+	// audioRecording();
+	pResistorMonitor();
 }
