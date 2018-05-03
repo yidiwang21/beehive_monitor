@@ -17,7 +17,7 @@ Pin 	o-----------.
 double res_sum = 0.0;
 double res_sum_log = 0.0;
 double diff_sum = 0.0;
-const double R_ref = 100000;	// FIXME
+const double R_ref = 1000000;	// FIXME: 100k for testing
 const double var_thresh = 100;	// FIXME
 
 //***************** Functions *******************
@@ -65,6 +65,12 @@ void updateReadings(void) {
 		Serial.print(i);
 		Serial.print(" th res_log = ");
 		Serial.println(pResistor[i].res_log);
+		Serial.print(i);
+		Serial.print(" th res = ");
+		Serial.println(pResistor[i].res);
+		Serial.print(i);
+		Serial.print(" th vol = ");
+		Serial.println(pResistor[i].vol);
 		// TODO: how to use diff_sum?
 		diff_sum += computeDiffAbs(pResistor[i].res, prev_pResistor[i].res);
 		res_sum_log += pResistor[i].res_log;
@@ -81,12 +87,13 @@ void judgeTraffic(void) {
 }
 
 void pResistorMonitor(void) {
-	delay(1000);
+	delay(5000);
 	updateReadings();
-	sendData();
+	// sendData();
+	printData();
 }
 
-void sendData() {
+void sendData(void) {
 	if (Bluetooth.available()) {
 		// TODO: test blurtooth to rpi
 		// sending data: traffic, diff_value, resistence, possibility,
@@ -100,4 +107,14 @@ void sendData() {
 		Serial.println("Bluetooth Unavailable!");
 		delay(100);
 	}
+}
+
+void printData() {
+	Serial.print("traffic: ");
+	Serial.println(computeTraffic());
+	Serial.print("resistance: ");
+	Serial.println(res_sum);
+	Serial.print("resistance difference: ");
+	Serial.println(diff_sum);
+	Serial.println("============================================");
 }
