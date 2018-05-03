@@ -10,5 +10,12 @@
 2. add sd card
 3. use Teensy audio lib design tool
 4. the recorded file in the teensy is raw, converting to wav
-5. resolve adc0 conflict
+5. resolve adc0 conflict by using adc1
 6. TODO: design external filter circuit
+
+05/03
+1. add sending photoresistors data via bluetooth
+2. change logic of updateReadings() for photoresistors
+3. input the wav file to matlab, but cannot extract the frequency of the noise of very high amplitude (tried comb filter)
+4. TODO: bluetooth test
+5. TODO: avoid noise, extract frequency
