@@ -83,5 +83,9 @@ void audioRecording(void) {
         }else continueRecording();
     }
     Serial.println("unplug");
-    delay(2000);
+    // for testing
+    if (SD.exists("save.raw")) {
+        Serial.println("file exists");
+    }
+    delay(1000);
 }

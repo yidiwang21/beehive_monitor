@@ -64,7 +64,7 @@ SoftwareSerial Bluetooth(BT_RX, BT_TX);	// RX, TX
 
 void setup() {
 	Serial.begin(9600);	// 57600
-	Bluetooth.begin(115200);
+	// Bluetooth.begin(115200);
 //****************** Pin Mode *******************
 	pinMode(pResistor[0].pin, INPUT);
  	// pinMode(pResistor[1].pin, INPUT);
@@ -102,6 +102,6 @@ void setup() {
 }
 
 void loop() {
-	// audioRecording();
-	pResistorMonitor();
+	audioRecording();
+	// pResistorMonitor();
 }
