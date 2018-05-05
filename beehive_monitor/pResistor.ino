@@ -17,7 +17,7 @@ Pin 	o-----------.
 double res_sum = 0.0;
 double res_sum_log = 0.0;
 double diff_sum = 0.0;
-const double R_ref = 1000000;	// FIXME: 100k for testing
+const double R_ref = 1000000;	// FIXME: 100k for testing, need precise value
 const double var_thresh = 100;	// FIXME
 
 //***************** Functions *******************
@@ -53,7 +53,7 @@ double computeDiffAbs(double a, double b) {
 }
 
 void updateReadings(void) {
-	int value = 0;
+	double value = 0.0;
 	for (int i = 0; i < pResistor_UNIT_NUM; i++) {
 		prev_pResistor[i].vol = pResistor[i].vol;
 		prev_pResistor[i].res = pResistor[i].res;

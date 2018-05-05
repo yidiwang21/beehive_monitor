@@ -69,7 +69,6 @@ void setup() {
 	pinMode(pResistor[0].pin, INPUT);
  	// pinMode(pResistor[1].pin, INPUT);
  	// pinMode(pResistor[2].pin, INPUT);
-	// attachInterrupt(audioRecorder, test_isr, FALLING);
 //***************** ADC Setups ******************
 	// ///// ADC0 ////
     // adc->setAveraging(16); // set number of averages

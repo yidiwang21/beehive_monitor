@@ -47,4 +47,4 @@ title('New Signal in Freq Domain');
 xlabel('\omega/\pi');
 ylabel('Amplitude');
 
-sound(y2,fs);
+% sound(y2,fs);
