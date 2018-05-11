@@ -1,5 +1,5 @@
 %% input
-[y,fs] = audioread('SAVE.WAV');
+[y,fs] = audioread('output.wav');
 len1 = length(y) - 1;
 t = (0:1:len1)/fs;
 y = y(:,1);
@@ -28,6 +28,8 @@ y0 = conv(h0,y);
 y1 = conv(h1,y0);
 y2 = conv(h2,y1);
 
+y2 = y0;
+
 %% output
 len_t = length(y2) - 1;
 tt = (0:1:len_t)/fs;
@@ -47,4 +49,4 @@ title('New Signal in Freq Domain');
 xlabel('\omega/\pi');
 ylabel('Amplitude');
 
-% sound(y2,fs);
+sound(y2,fs);

@@ -23,6 +23,7 @@ int ff = 1;
 void startRecording(void) {
     Serial.println("Start recording");
     if (SD.exists("save.raw")) {
+        Serial.println("Remove existing file");
         SD.remove("save.raw");
     }
     audio_saving = SD.open("save.raw", FILE_WRITE);
@@ -86,6 +87,8 @@ void audioRecording(void) {
     // for testing
     if (SD.exists("save.raw")) {
         Serial.println("file exists");
+    }else {
+        Serial.println("file does not exist");
     }
-    delay(1000);
+    delay(5000);
 }
