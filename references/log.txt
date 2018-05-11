@@ -24,3 +24,8 @@
 05/04
 1. TODO: low pass filter
 2. TODO: test with gain pin connected to VDD
+
+05/10
+1. The ADC for the light sensors has messed up what I got from the microphone
+2. TODO: solve adc problem
+3. TODO: fast adc
