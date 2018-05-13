@@ -36,7 +36,9 @@
 3. TODO: try the code found today
 
 05/12
+
 1. finished testing MAX9814
 2. merge mic_test, merge test to beta branch
-2. TODO: only 2 adc, what for processing MEMS MIC?
-3. TODO: MEMS MIC need a amp circuit
+3. common analog gnd and digital gnd messed up
+4. TODO: only 2 adc, what for processing MEMS MIC?
+5. TODO: MEMS MIC need a amp circuit
