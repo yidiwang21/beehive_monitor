@@ -42,12 +42,8 @@ struct PhotoResistors prev_pResistor[pResistor_UNIT_NUM] = {
 };
 
 //***************** Teensy Pins *****************
-// const int ledPin = 13;	// default led pin
-/* photoresistors pins already defined in pResistor.ino
-const int pResistor1 = 31;
-const int pResistor2 = 32;
-const int pResistor3 = 33;
-*/
+const int ledPin = 13;	// default led pin
+
 const int audioRecorder = 16;
 const int audioTrigger = 0;
 
@@ -72,7 +68,6 @@ void setup() {
 //***************** ADC Setups ******************
     // ADC1 //
 	// use adc1 to resolve adc0 audio input conflict
-  // ADC0 has been used for microphone 
     #if ADC_NUM_ADCS > 1
     adc->setAveraging(16, ADC_1); // set number of averages
     adc->setResolution(16, ADC_1); // set bits of resolution
