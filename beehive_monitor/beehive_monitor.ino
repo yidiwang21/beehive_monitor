@@ -70,13 +70,9 @@ void setup() {
  	// pinMode(pResistor[1].pin, INPUT);
  	// pinMode(pResistor[2].pin, INPUT);
 //***************** ADC Setups ******************
-	// ///// ADC0 ////
-    // adc->setAveraging(16); // set number of averages
-    // adc->setResolution(16); // set bits of resolution
-    // adc->setConversionSpeed(ADC_CONVERSION_SPEED::VERY_LOW_SPEED); // change the conversion speed
-    // adc->setSamplingSpeed(ADC_SAMPLING_SPEED::MED_SPEED); // change the sampling speed
-    // ADC1 /////
+    // ADC1 //
 	// use adc1 to resolve adc0 audio input conflict
+  // ADC0 has been used for microphone 
     #if ADC_NUM_ADCS > 1
     adc->setAveraging(16, ADC_1); // set number of averages
     adc->setResolution(16, ADC_1); // set bits of resolution

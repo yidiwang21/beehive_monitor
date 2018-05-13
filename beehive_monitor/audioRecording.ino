@@ -9,15 +9,12 @@
  *
  */
 //************ Audio System Design **************
-AudioInputAnalog         adc1;           //xy=192,198
-AudioRecordQueue         queue1;         //xy=373,269
-AudioAnalyzeFFT1024      fft1024_1;      //xy=374,192
-AudioConnection          patchCord1(adc1, fft1024_1);
+AudioInputAnalog         adc1;
+AudioRecordQueue         queue1;
 AudioConnection          patchCord2(adc1, queue1);
 
 //***************** Variables *******************
 File audio_saving;
-int ff = 1;
 
 //***************** Functions *******************
 void startRecording(void) {
@@ -51,6 +48,7 @@ void continueRecording(void) {
     if (queue1.available() >= 2) {
         byte buffer[512];
         memcpy(buffer, queue1.readBuffer(), 256);
+        queue1.freeBuffer();
         memcpy(buffer + 256, queue1.readBuffer(), 256);
         queue1.freeBuffer();
         elapsedMicros usec = 0;
@@ -59,20 +57,6 @@ void continueRecording(void) {
         Serial.println(usec);
     }
 }
-//
-// void audioFFTtest(void) {
-//     if (fft1024_1.available()) {
-//         float fftAccumulator = 0;
-//         for (int i = 0; i < 512; ++i)
-//             fftAccumulator += fft1024_1.read(i);
-//         ff = (int)(fftAccumulator * 100);
-//         for (int i = 0; i < ff; i++) {
-//             Serial.print("f");
-//             Serial.printf("\tFFT: %d\n", ff);
-//         }
-//     }else
-//         Serial.println("Unavailable fft");
-// }
 
 void audioRecording(void) {
     startRecording();
@@ -83,12 +67,11 @@ void audioRecording(void) {
             break;
         }else continueRecording();
     }
-    Serial.println("unplug");
     // for testing
     if (SD.exists("save.raw")) {
         Serial.println("file exists");
     }else {
         Serial.println("file does not exist");
     }
-    delay(5000);
+    while(1);
 }
