@@ -14,3 +14,5 @@ https://cdn-shop.adafruit.com/datasheets/MAX9814.pdf
 Bluetooth between Arduino and rpi
 https://www.pi4iot.com/doku.php?id=components:bluetooth
 https://www.youtube.com/watch?v=rxExVsxI9jc&list=PL-LuHXHssBEOVRIB_mmrPDyC7OP_X1tOM&index=6
+http://www.uugear.com/portfolio/bluetooth-communication-between-raspberry-pi-and-arduino/
+http://blog.whatgeek.com.pt/2015/09/bluetooth-communication-between-raspberry-pi-and-arduino/
