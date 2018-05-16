@@ -60,7 +60,7 @@ SoftwareSerial Bluetooth(BT_RX, BT_TX);	// RX, TX
 
 void setup() {
 	Serial.begin(9600);	// 57600
-	// Bluetooth.begin(115200);
+	Bluetooth.begin(115200);
 //****************** Pin Mode *******************
 	pinMode(pResistor[0].pin, INPUT);
  	// pinMode(pResistor[1].pin, INPUT);
@@ -68,12 +68,12 @@ void setup() {
 //***************** ADC Setups ******************
     // ADC1 //
 	// use adc1 to resolve adc0 audio input conflict
-    #if ADC_NUM_ADCS > 1
+    // #if ADC_NUM_ADCS > 1
     adc->setAveraging(16, ADC_1); // set number of averages
     adc->setResolution(16, ADC_1); // set bits of resolution
     adc->setConversionSpeed(ADC_CONVERSION_SPEED::MED_SPEED, ADC_1); // change the conversion speed
     adc->setSamplingSpeed(ADC_SAMPLING_SPEED::MED_SPEED, ADC_1); // change the sampling speed
-    #endif
+    // #endif
 //**************** SD Card Inits *****************
 	SPI.setMOSI(SDCARD_MOSI_PIN);
 	SPI.setSCK(SDCARD_SCK_PIN);
