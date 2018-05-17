@@ -61,6 +61,12 @@ SoftwareSerial Bluetooth(BT_RX, BT_TX);	// RX, TX
 void setup() {
 	Serial.begin(9600);	// 57600
 	Bluetooth.begin(115200);
+	if (!(Bluetooth.available())) {
+		while (true) {
+			Serial.println("Bluetooth unavailable");
+			delay(200);
+		}
+	}
 //****************** Pin Mode *******************
 	pinMode(pResistor[0].pin, INPUT);
  	// pinMode(pResistor[1].pin, INPUT);
@@ -80,7 +86,7 @@ void setup() {
 	if (!(SD.begin(SDCARD_CS_PIN))) {	// stop here if no SD card, but print a message
     	while (true) {
       		Serial.println("Unable to access the SD card!");
-			delay(100);
+			delay(200);
     	}
   	}
 	else
@@ -92,6 +98,6 @@ void setup() {
 }
 
 void loop() {
-	audioRecording();
+	// audioRecording();
 	// pResistorMonitor();
 }
