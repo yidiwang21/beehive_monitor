@@ -51,8 +51,8 @@ const int SDCARD_CS_PIN = BUILTIN_SDCARD;	// 254?
 const int SDCARD_MOSI_PIN = 11;
 const int SDCARD_SCK_PIN = 13;
 
-const int BT_RX = 0;
-const int BT_TX = 1;
+const int BT_RX = 9;
+const int BT_TX = 10;
 
 //***************** objects *****************
 ADC *adc = new ADC();	// adc object
@@ -60,13 +60,8 @@ SoftwareSerial Bluetooth(BT_RX, BT_TX);	// RX, TX
 
 void setup() {
 	Serial.begin(9600);	// 57600
-	Bluetooth.begin(115200);
-	if (!(Bluetooth.available())) {
-		while (true) {
-			Serial.println("Bluetooth unavailable");
-			delay(200);
-		}
-	}
+	Bluetooth.begin(9600);
+	Bluetooth.println("Hello Viewer!");
 //****************** Pin Mode *******************
 	pinMode(pResistor[0].pin, INPUT);
  	// pinMode(pResistor[1].pin, INPUT);
@@ -99,5 +94,5 @@ void setup() {
 
 void loop() {
 	// audioRecording();
-	// pResistorMonitor();
+	pResistorMonitor();
 }
