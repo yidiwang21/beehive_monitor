@@ -40,3 +40,9 @@
 2. merge mic_test, merge test to beta branch
 2. TODO: only 2 adc, what for processing MEMS MIC?
 3. TODO: MEMS MIC need a amp circuit
+
+05/17
+1. finished rpi blutooth setup
+2. finished sending data of pResistors to rpi
+3. TODO: send raw audio data to rpi
+4. TODO: try higher baudrate for bluetoorh serial
