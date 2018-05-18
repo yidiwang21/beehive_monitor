@@ -60,7 +60,7 @@ SoftwareSerial Bluetooth(BT_RX, BT_TX);	// RX, TX
 
 void setup() {
 	Serial.begin(9600);	// 57600
-	Bluetooth.begin(115200);
+	Bluetooth.begin(9600);
 	Bluetooth.println("Hello Viewer!");
 //****************** Pin Mode *******************
 	pinMode(pResistor[0].pin, INPUT);

@@ -46,3 +46,4 @@
 2. finished sending data of pResistors to rpi
 3. TODO: send raw audio data to rpi
 4. TODO: try higher baudrate for bluetoorh serial
+5. NOTE: script must run previous than arduino
