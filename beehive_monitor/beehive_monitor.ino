@@ -51,6 +51,7 @@ const int SDCARD_CS_PIN = BUILTIN_SDCARD;	// 254?
 const int SDCARD_MOSI_PIN = 11;
 const int SDCARD_SCK_PIN = 13;
 
+// tried other rx tx pins, didn't work
 const int BT_RX = 9;
 const int BT_TX = 10;
 
