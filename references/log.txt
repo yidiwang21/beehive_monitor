@@ -47,3 +47,8 @@
 3. TODO: send raw audio data to rpi
 4. TODO: try higher baudrate for bluetoorh serial
 5. NOTE: script must run previous than arduino
+
+05/21
+1. get freq spectrum
+2. download free bee audio file
+3. TODO: what feature should be sent to the rpi?

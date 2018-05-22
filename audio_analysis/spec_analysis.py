@@ -3,19 +3,29 @@
 Created on May 20, 2018
 Description: plot basic spectrums of the audio file
 
+ffmpeg -i input.mp3 output.wav
 '''
 import matplotlib.pyplot as plt
 import numpy as np
 import wave
 import sys
 from scipy.fftpack import fft, ifft, fftshift
+from scipy.signal import argrelextrema, find_peaks_cwt, general_gaussian, fftconvolve
 from math import pi
+
+import warnings
+warnings.simplefilter("once", DeprecationWarning)
 
 class AudioSpec():
     def __init__(self, file):
         self.wf = wave.open(file, 'rb')
         self.data = self.wf.readframes(-1)
-        self.data = np.fromstring(self.data, 'Int16')
+        self.data = np.frombuffer(self.data, 'Int16')
+#         window = general_gaussian(51, p = 0.5, sig = 50)
+#         self.env = fftconvolve(window, self.data)
+#         self.env = (np.average(self.data) / np.average(self.env)) * self.env
+#         self.env = np.roll(self.env, -25)
+#         self.env = self.env[argrelextrema(self.env, np.greater)[0]]
 
     def time_spec(self):
         len1 = len(self.data)
@@ -38,6 +48,7 @@ class AudioSpec():
         plt.figure(2)
         plt.title('Waveform in Freq Domain')
         plt.plot(self.freq, abs(self.y))
+#         plt.plot(abs(self.y))
         plt.xlabel('Freq omega / pi')
         plt.ylabel('Amplitude')
         plt.show()
@@ -49,7 +60,7 @@ class AudioSpec():
 
 if __name__ == '__main__':
     try:
-        f = AudioSpec("output.wav")
+        f = AudioSpec("../bee_sounds/bee_swarm_small.wav")
         f.main()
     except KeyboardInterrupt:
         print('Terminated')
