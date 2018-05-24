@@ -27,19 +27,14 @@ class calc():
         else:
             return 2 ** (x - 1).bit_length()
 
-    def getMaxRange(self, arr, interval, fs):
-        y = np.array([])
-        num = int(ceil(len(arr) / interval))
-        idxs = np.arange(1, num)
-        for i in range(1, num):
-            y = np.append(y, np.average(arr[(i-1) * interval : i * interval]))
-        y = np.vstack((y, idxs))
-        y = np.transpose(y)
-        y = y[y[:,0].argsort()]
-        y[:,1] = y[:,1] * interval * fs / len(y)
-        # # TODO: transfer second col of y to corresponding freq
-
-        return y[0:3,:]
+    def getMaxRange(self, arr, f, interval):
+        f_sort = f[arr.argsort()[::-1]]
+        print f_sort[0:20]
+        ff = np.array([])
+        for e in f_sort[0:20]:
+            ff = np.append(ff, int(e / interval) * interval)
+        ff, idx = np.unique(ff, return_inverse = True)
+        return ff[idx]
 
 class AudioSpec():
     def __init__(self, file):
@@ -59,24 +54,25 @@ class AudioSpec():
     def freq_spec(self):
         self.y = fft(self.data, self.len1)
         self.y = abs(self.y)
-        # self.y = self.y / float(self.len1)
+        self.y = self.y / float(self.len1)
         self.y = self.y ** 2
 #         self.y = fftshift(self.y)
         len2 = len(self.y)
         self.f = np.arange(0, len2) * self.fs / self.len1
         # get envolope of the frequency waveform
-        self.yy = self.y[argrelextrema(self.y, np.greater)[0]]
+        self.yy = self.y[1:int(floor(self.len1/2))]
+        self.yy = self.yy[argrelextrema(self.yy, np.greater)[0]]
         indexes = scipy.signal.argrelextrema(
             np.array(self.yy),
             comparator = np.greater,order = 500
             )
-        print('Peaks are: %s' % (indexes[0]))
+        # print('Peaks are: %s' % (indexes[0]))
         self.yy =  self.yy[indexes]
-        print len(self.yy)
         self.len_env = len(self.yy)
         self.f_env = np.arange(0, self.len_env) * self.fs / self.len_env
-        yy = self.calc_ins.getMaxRange(self.yy, len(self.yy)/20, self.fs)
-        print yy
+        # yy = self.f_env[self.yy.argsort()[::-1]]
+        yy = self.calc_ins.getMaxRange(self.yy, self.f_env, 50)
+        print yy[0:10]
 
 
     def plot_spec(self):
