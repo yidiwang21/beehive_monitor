@@ -102,7 +102,7 @@ class AudioProcessing():
     def main(self):
         self.time_spec()
         self.freq_spec()
-        # self.plot_spec()
+        self.plot_spec()
 
 if __name__ == '__main__':
     try:
