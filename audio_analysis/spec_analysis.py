@@ -5,7 +5,7 @@ Description: basic processing of the audio file
 
 ffmpeg -i input.mp3 output.wav
 '''
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import numpy as np
 import wave
 import sys
