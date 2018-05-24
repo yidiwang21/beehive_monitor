@@ -1,5 +1,5 @@
 %% spectrum analysis
-[y,fs] = audioread('output.wav');
+[y,fs] = audioread('../bee_sounds/bee_swarm_small.wav');
 len1 = length(y) - 1;
 t = (0:1:len1)/fs;
 y = y(:,1);
