@@ -116,7 +116,10 @@ class AudioProcessing():
 
 if __name__ == '__main__':
     try:
-        f = AudioProcessing("../bee_sounds/bee_swarm_small.wav")
-        f.main()
+        f1 = AudioProcessing("../bee_sounds/bee_swarm_small.wav")
+        f1.main()
+
+        f2 = AudioProcessing("../bee_sounds/bee_inside_box.wav")
+        f2.main()
     except KeyboardInterrupt:
         print('Terminated')

@@ -71,6 +71,7 @@ void audioRecording(void) {
     if (SD.exists("save.raw"))
         Serial.println("file exists");
     else Serial.println("file does not exist");
+    flag = 2;
     while(1);
 }
 
@@ -89,4 +90,5 @@ void sendAudioFile(void) {
         audio_rec.close();
     }else
         Serial.println("Error opening file!");
+    flag = 3;
 }

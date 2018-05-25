@@ -20,6 +20,7 @@
 
 //***************** Variables *******************
 int recordingMode = 0;  // status: 0 = stop, 1 = recording
+int flag = 0;			// 1: finished pResistors; 2: finished recording audio; 3: finished sending audio file
 
 //****************** structs ********************
 struct PhotoResistors {
@@ -94,7 +95,7 @@ void setup() {
 }
 
 void loop() {
-	// sendAudioFile();
+	sendAudioFile();
 	// audioRecording();
-	pResistorMonitor();
+	// pResistorMonitor();
 }

@@ -101,7 +101,7 @@ void sendData(void) {
 	Bluetooth.println(res_sum);
 	Bluetooth.println("resistance difference: ");
 	Bluetooth.println(diff_sum);
-	delay(100);
+	flag = 1;
 }
 
 void printData() {
