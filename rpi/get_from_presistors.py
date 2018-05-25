@@ -18,11 +18,13 @@ if bluetoothSerial:
 
 def writeToFile():
     with open('pResistors.csv', 'wb') as csvfile:
-        fw = csv.writer(csvfile)
-        data = bluetoothSerial.readline()
-        print(data)
-        print("==============================")
-        fw.writerow([time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), data])
+        fw = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        fw.writerow(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()))
+        print("===============================")
+        for cnt in range(1,6):
+            data = bluetoothSerial.readline()
+            print(data)
+            fw.writerow(data)
         time.sleep(1)
 
 if __name__ == '__main__':

@@ -94,8 +94,7 @@ void pResistorMonitor(void) {
 }
 
 void sendData(void) {
-	if (Bluetooth.available()) {
-		// TODO: test blurtooth to rpi
+	// if (Bluetooth.available()) {
 		// sending data: traffic, diff_value, resistence, possibility,
 		Bluetooth.println("traffic: ");
 		Bluetooth.println(computeTraffic());
@@ -103,10 +102,10 @@ void sendData(void) {
 		Bluetooth.println(res_sum);
 		Bluetooth.println("resistance difference: ");
 		Bluetooth.println(diff_sum);
-	}else {
-		Serial.println("Bluetooth Unavailable!");
-		delay(100);
-	}
+	// }else {
+	// 	Serial.println("Bluetooth Unavailable!");
+	// }
+	delay(100);
 }
 
 void printData() {
