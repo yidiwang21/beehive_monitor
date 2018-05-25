@@ -19,9 +19,9 @@ def writeToFile():
     fw = csv.writer(csvfile, delimiter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
     list = []
     for cnt in range(0,6):
-        data = bluetoothSerial.readline()
+        data = bluetoothSerial.read().splitlines()
         print(str(data))
-        list.append(data)
+        list.append(str(data))
     fw.writerow([time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), str(list)])
     time.sleep(1)
 
