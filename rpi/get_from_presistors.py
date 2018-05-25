@@ -21,7 +21,7 @@ def writeToFile():
         fw = csv.writer(csvfile)
         data = bluetoothSerial.readline()
         print(data)
-        fw.writerow(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), data)
+        fw.writerow([time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), data])
         time.sleep(1)
 
 if __name__ == '__main__':
