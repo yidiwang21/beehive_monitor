@@ -34,6 +34,9 @@ class calc():
         _, idx = np.unique(ff, return_index = True)
         return ff[np.sort(idx)]
 
+    def getLocalMax(self, arr, f, interval):
+        pass
+
 class AudioProcessing():
     def __init__(self, file):
         self.wf = wave.open(file, 'rb')
