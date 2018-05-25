@@ -57,16 +57,14 @@ class AudioProcessing():
         self.y = abs(self.y)
         self.y = self.y / float(self.len1)
         self.y = self.y ** 2
-        # self.y = fftshift(self.y
         self.f = np.arange(0, len(self.y)) * self.fs / self.len1
         # get envolope of the frequency waveform
         self.yy = self.y[1:int(floor(self.len1/2))]
         self.yy = self.yy[argrelextrema(self.yy, np.greater)[0]]
         indexes = argrelextrema(
             np.array(self.yy),
-            comparator = np.greater,order = 500
+            comparator = np.greater,order = 100 # FIXME: depend on the degree of dispersion
             )
-        # print('Peaks are: %s' % (indexes[0]))
         self.yy =  self.yy[indexes]
         self.len_env = len(self.yy)
         self.f_env = np.arange(0, self.len_env) * self.fs / self.len_env
@@ -84,7 +82,6 @@ class AudioProcessing():
         plt.figure(2)
         plt.title('Waveform in Freq Domain')
         plt.plot(self.f[1:int(floor(self.len1/2))], self.y[1:int(floor(self.len1/2))])
-        # plt.plot(abs(self.y))
         plt.xlabel('Frequency(Hz)')
         plt.ylabel('Amplitude')
 

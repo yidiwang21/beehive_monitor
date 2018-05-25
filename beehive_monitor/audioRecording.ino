@@ -72,3 +72,15 @@ void audioRecording(void) {
     else Serial.println("file does not exist");
     while(1);
 }
+
+void sendFile(void) {
+    audio_rec = SD.open("save.raw");
+    if (audio_rec) {
+        while (audio_rec.available() && Bluetooth.available()) {
+            Bluetooth.write(audio_rec.read())
+        }
+        audio_rec.close()
+    }else {
+        Serial.println("Error opening file!")
+    }
+}
