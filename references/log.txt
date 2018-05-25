@@ -57,4 +57,7 @@
 1. finished the draft of audio features extraction
 2. TODO: do it on rpi
 3. FIXME: no data write to the raw file created on rpi
-4. add draft of sending/receiving audio file to rpi via bluetooth 
+4. add draft of sending/receiving audio file to rpi via bluetooth
+
+05/25
+1. store data from photoresistors to a csv file

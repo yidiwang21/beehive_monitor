@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import wave
 import sys
+import time
+import csv
 from scipy.fftpack import fft, ifft, fftshift
 from scipy.signal import argrelextrema, find_peaks_cwt
 from math import pi, log, floor, ceil
@@ -36,6 +38,12 @@ class calc():
 
     def getLocalMax(self, arr, f, interval):
         pass
+
+    def writeToFile(self, arr):
+        with open('freq.csv', 'wb') as csvfile:
+            fw = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            fw.writerow([time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), str(arr)])
+        time.sleep(1)
 
 class AudioProcessing():
     def __init__(self, file):
@@ -71,6 +79,7 @@ class AudioProcessing():
         yy = self.calc_ins.getMaxRange(self.yy, self.f_env, 50)
         print('Feature Frequencies:')
         print yy[0:10]
+        self.calc_ins.writeToFile(yy[0:10])
 
     def plot_spec(self):
         plt.figure(1)
@@ -102,7 +111,7 @@ class AudioProcessing():
     def main(self):
         self.time_spec()
         self.freq_spec()
-        self.plot_spec()
+        # self.plot_spec()
 
 if __name__ == '__main__':
     try:
