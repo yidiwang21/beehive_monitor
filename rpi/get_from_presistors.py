@@ -20,7 +20,7 @@ def writeToFile():
     with open('pResistors.csv', 'wb') as csvfile:
         fw = csv.writer(csvfile, quotechar = '|', quoting = csv.QUOTE_MINIMAL)
         fw.writerow(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()))
-        for cnt in range(1,6):
+        for cnt in range(0,6):
             data = bluetoothSerial.readline()
             print(data)
             fw.writerow(data)
