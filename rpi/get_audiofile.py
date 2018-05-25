@@ -16,10 +16,11 @@ if bluetoothSerial:
 
 class saveFile():
     def __init__(self):
-        self.f = open("input.raw", "w")
+        self.f = open("input.raw", "wb")
 
     def getData(self):
         data = bluetoothSerial.readline()
+        print data
         time.sleep(1)
         return data
 
@@ -38,6 +39,7 @@ class saveFile():
             else:
                 break
         self.closeFile()
+        print("File closed")
 
 if __name__ == '__main__':
     try:

@@ -62,4 +62,4 @@
 05/25
 1. store data from photoresistors to a csv file
 2. store freq to a csv file
-3. TODO: send audio file via bt
+3. TODO: send audio file via bt, fix get_audiofile.py
