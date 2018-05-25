@@ -16,14 +16,14 @@ if bluetoothSerial:
     print("Bluetooth connected")
 
 def writeToFile():
-    fw = csv.writer(csvfile, delimiter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
+    fw = csv.writer(csvfile)
     list = []
     for cnt in range(0,6):
         data = bluetoothSerial.readline()
         data = data.replace("\r\n", "")
         print(str(data))
-        list.append(str(data).strip())
-    fw.writerow([time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), str(list)])
+        list.append(data.strip())
+    fw.writerow([time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), list])
     time.sleep(1)
 
 if __name__ == '__main__':
