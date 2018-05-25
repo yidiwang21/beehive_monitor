@@ -17,12 +17,11 @@ if bluetoothSerial:
     print("Bluetooth connected")
 
 def writeToFile():
-    with open('pResistors.csv', 'rb') as csvfile:
+    with open('pResistors.csv', 'wb') as csvfile:
         fw = csv.writer(csvfile)
         data = bluetoothSerial.readline()
         print(data)
-        fw.write(strftime("%Y-%m-%d %H:%M:%S", time.gmtime()))
-        fw.writerow(data)
+        fw.writerow(strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), data)
         time.sleep(1)
 
 if __name__ == '__main__':
