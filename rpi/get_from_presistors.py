@@ -22,7 +22,7 @@ def writeToFile():
         data = bluetoothSerial.readlines()
         print(str(data))
         list.append(str(data))
-    fw.writerow([time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), str(list).strip()])
+    fw.writerow([time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), str(list)])
     time.sleep(1)
 
 if __name__ == '__main__':
