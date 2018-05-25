@@ -16,15 +16,14 @@ bluetoothSerial = serial.Serial("/dev/rfcomm0", baudrate = 9600)    # FIXME
 if bluetoothSerial:
     print("Bluetooth connected")
 
-def writeToFile():
-    with open('pResistors.csv', 'wb') as csvfile:
-        fw = csv.writer(csvfile, quotechar = '|', quoting = csv.QUOTE_MINIMAL)
-        fw.writerow(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()))
-        for cnt in range(0,6):
-            data = bluetoothSerial.readline()
-            print(data)
-            fw.writerow(data)
-        time.sleep(1)
+with open('pResistors.csv', 'wb') as csvfile:
+    fw = csv.writer(csvfile, quotechar = '|')
+    fw.writerow(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()))
+    for cnt in range(0,6):
+        data = bluetoothSerial.readline()
+        print(data)
+        fw.writerow(str(data))
+    time.sleep(1)
 
 if __name__ == '__main__':
     try:
@@ -32,4 +31,5 @@ if __name__ == '__main__':
             print("===============================")
             writeToFile()
     except KeyboardInterrupt:
+        fw.close()
         print("Terminated")
