@@ -94,7 +94,7 @@ void setup() {
 }
 
 void loop() {
-	sendAudioFile();
+	// sendAudioFile();
 	// audioRecording();
-	// pResistorMonitor();
+	pResistorMonitor();
 }
