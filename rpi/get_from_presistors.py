@@ -25,6 +25,3 @@ with open('pResistors.csv', 'wb') as csvfile:
         print(data)
         fw.writerow(str(data))
     time.sleep(1)
-
-fw.close()
-print("File Closed")
