@@ -18,6 +18,8 @@ from math import pi, log, floor, ceil
 import warnings
 warnings.simplefilter("once", DeprecationWarning)
 
+csvfile =  open('freq.csv', 'wb')
+
 class calc():
     def __init__(self):
         pass
@@ -40,9 +42,8 @@ class calc():
         pass
 
     def writeToFile(self, arr):
-        with open('freq.csv', 'wb') as csvfile:
-            fw = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            fw.writerow([time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), str(arr)])
+        fw = csv.writer(csvfile, delimiter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
+        fw.writerow([time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), str(arr)])
         time.sleep(1)
 
 class AudioProcessing():

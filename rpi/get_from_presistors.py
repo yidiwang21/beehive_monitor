@@ -16,7 +16,7 @@ if bluetoothSerial:
     print("Bluetooth connected")
 
 def writeToFile():
-    fw = csv.writer(csvfile)
+    fw = csv.writer(csvfile, delimiter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
     list = []
     for cnt in range(0,6):
         data = bluetoothSerial.readline()
