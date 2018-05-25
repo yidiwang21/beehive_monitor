@@ -24,7 +24,7 @@ class saveFile():
         return data
 
     def writeToFile(self, data):
-            data = data.format(r"\r\n\\")
+            # data = data.format(r"\r\n\\")
             self.f.write(data)
 
     def closeFile(self):

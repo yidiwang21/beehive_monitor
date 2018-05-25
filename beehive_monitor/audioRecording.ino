@@ -68,19 +68,24 @@ void audioRecording(void) {
         }else continueRecording();
     }
     // for testing
-    if (SD.exists("save.raw")) Serial.println("file exists");
+    if (SD.exists("save.raw"))
+        Serial.println("file exists");
     else Serial.println("file does not exist");
     while(1);
 }
 
-void sendFile(void) {
-    audio_rec = SD.open("save.raw");
-    if (audio_rec) {
-        while (audio_rec.available() && Bluetooth.available()) {
-            Bluetooth.write(audio_rec.read())
-        }
-        audio_rec.close()
-    }else {
-        Serial.println("Error opening file!")
+void sendAudioFile(void) {
+    if (SD.exists("save.raw")) {
+        audio_rec = SD.open("save.raw");
+        Serial.println("File opened.");
     }
+    if (audio_rec) {
+        Serial.println("Start sending audio file");
+        while (audio_rec.available()) {
+            Bluetooth.write(audio_rec.read());
+        }
+        Serial.println("Finished");
+        audio_rec.close();
+    }else
+        Serial.println("Error opening file!");
 }
