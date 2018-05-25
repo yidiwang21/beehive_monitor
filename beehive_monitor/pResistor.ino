@@ -87,24 +87,20 @@ void judgeTraffic(void) {
 }
 
 void pResistorMonitor(void) {
-	delay(5000);
+	delay(10000);
 	updateReadings();
 	sendData();
 	printData();
 }
 
 void sendData(void) {
-	// if (Bluetooth.available()) {
-		// sending data: traffic, diff_value, resistence, possibility,
-		Bluetooth.println("traffic: ");
-		Bluetooth.println(computeTraffic());
-		Bluetooth.println("resistance: ");
-		Bluetooth.println(res_sum);
-		Bluetooth.println("resistance difference: ");
-		Bluetooth.println(diff_sum);
-	// }else {
-	// 	Serial.println("Bluetooth Unavailable!");
-	// }
+	// sending data: traffic, diff_value, resistence, possibility,
+	Bluetooth.println("traffic: ");
+	Bluetooth.println(computeTraffic());
+	Bluetooth.println("resistance: ");
+	Bluetooth.println(res_sum);
+	Bluetooth.println("resistance difference: ");
+	Bluetooth.println(diff_sum);
 	delay(100);
 }
 
