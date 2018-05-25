@@ -28,7 +28,8 @@ def writeToFile():
 
 if __name__ == '__main__':
     try:
-        print("===============================")
-        writeToFile()
+        while True:            
+            print("===============================")
+            writeToFile()
     except KeyboardInterrupt:
         print("Terminated")
