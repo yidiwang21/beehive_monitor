@@ -21,8 +21,11 @@ const double R_ref = 1000000;	// FIXME: 100k for testing, need precise value
 const double var_thresh = 100;	// FIXME
 
 //***************** Functions *******************
-int computeTraffic(void) {
-	return (int)res_sum_log % 5;
+double computeTraffic(void) {
+	if (res_sum_log - 5 < 0)
+		return 0;
+	else
+		return res_sum_log - 5;
 }
 
 double vol2Res(double vol) {
@@ -54,6 +57,9 @@ double computeDiffAbs(double a, double b) {
 
 void updateReadings(void) {
 	double value = 0.0;
+	res_sum = 0.0;
+	res_sum_log = 0.0;
+	diff_sum = 0.0;
 	for (int i = 0; i < pResistor_UNIT_NUM; i++) {
 		prev_pResistor[i].vol = pResistor[i].vol;
 		prev_pResistor[i].res = pResistor[i].res;
@@ -72,6 +78,7 @@ void updateReadings(void) {
 		Serial.print(" th vol = ");
 		Serial.println(pResistor[i].vol);
 		// TODO: how to use diff_sum?
+		res_sum += pResistor[i].res;
 		diff_sum += computeDiffAbs(pResistor[i].res, prev_pResistor[i].res);
 		res_sum_log += pResistor[i].res_log;
 	}

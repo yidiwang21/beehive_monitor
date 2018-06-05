@@ -63,3 +63,10 @@
 1. store data from photoresistors to a csv file
 2. store freq to a csv file
 3. TODO: send audio file via bt, fix get_audiofile.py
+
+06/04
+1. add execution time measurement
+2. fix the res_sum = 0.0 problem
+3. change the value of traffic to double type
+4. change recording time to 15 seconds
+4. finished slides

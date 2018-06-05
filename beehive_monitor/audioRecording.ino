@@ -62,7 +62,7 @@ void audioRecording(void) {
     startRecording();
     unsigned long time = millis();
     while (true) {
-        if(millis() - time > 5000 && recordingMode == 1) {
+        if(millis() - time > 15000 && recordingMode == 1) {
             stopRecording();
             break;
         }else continueRecording();
