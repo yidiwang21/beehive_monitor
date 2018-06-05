@@ -117,15 +117,17 @@ class AudioProcessing():
 if __name__ == '__main__':
     try:
         start_time = time.time()
-        print start_time
         f1 = AudioProcessing("../bee_sounds/bee_swarm_small.wav")
         f1.main()
         end_time = time.time()
-        print end_time
         print("Execution Time: ", end_time - start_time)
 
-        # f2 = AudioProcessing("../bee_sounds/bee_inside_box.wav")
-        # f2.main()
+        start_time = time.time()
+        f2 = AudioProcessing("../bee_sounds/bee_inside_box.wav")
+        f2.main()
+        end_time = time.time()
+        print("Execution Time: ", end_time - start_time)
+
         #
         # f3 = AudioProcessing("../bee_sounds/bee_buzzing_single.wav")
         # f3.main()
