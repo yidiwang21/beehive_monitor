@@ -94,7 +94,6 @@ void judgeTraffic(void) {
 }
 
 void pResistorMonitor(void) {
-	delay(10000);
 	updateReadings();
 	sendData();
 	printData();

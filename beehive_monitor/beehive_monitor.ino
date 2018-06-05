@@ -89,13 +89,16 @@ void setup() {
 	else
   		Serial.println("Successfully access the SD card!");
 //*************** Audio Recording ****************
-	delay(1000);
+	delay(100);
 	Serial.println("Teensy Audio AudioMemory()");
     AudioMemory(60);	// FIXME
 }
 
 void loop() {
-	// sendAudioFile();
-	// audioRecording();
+	audioRecording();
+	pResistorMonitor();
+	delay(15000);
+	pResistorMonitor();
+	delay(15000);
 	pResistorMonitor();
 }
