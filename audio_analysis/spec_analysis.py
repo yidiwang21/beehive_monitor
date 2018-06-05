@@ -33,7 +33,7 @@ class calc():
     def getMaxRange(self, arr, f, interval):
         f_sort = f[arr.argsort()[::-1]]
         ff = np.array([])
-        for e in f_sort[0:20]:
+        for e in f_sort[0:50]:
             ff = np.append(ff, int(e / interval) * interval)
         _, idx = np.unique(ff, return_index = True)
         return ff[np.sort(idx)]
@@ -116,10 +116,18 @@ class AudioProcessing():
 
 if __name__ == '__main__':
     try:
+        start_time = time.time()
+        print start_time
         f1 = AudioProcessing("../bee_sounds/bee_swarm_small.wav")
         f1.main()
+        end_time = time.time()
+        print end_time
+        print("Execution Time: ", end_time - start_time)
 
-        f2 = AudioProcessing("../bee_sounds/bee_inside_box.wav")
-        f2.main()
+        # f2 = AudioProcessing("../bee_sounds/bee_inside_box.wav")
+        # f2.main()
+        #
+        # f3 = AudioProcessing("../bee_sounds/bee_buzzing_single.wav")
+        # f3.main()
     except KeyboardInterrupt:
         print('Terminated')
