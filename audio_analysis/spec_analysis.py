@@ -38,9 +38,6 @@ class calc():
         _, idx = np.unique(ff, return_index = True)
         return ff[np.sort(idx)]
 
-    def getLocalMax(self, arr, f, interval):
-        pass
-
     def writeToFile(self, arr):
         fw = csv.writer(csvfile, delimiter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
         fw.writerow([time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), str(arr)])

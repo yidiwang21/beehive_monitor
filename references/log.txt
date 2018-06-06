@@ -36,7 +36,7 @@
 3. TODO: try the code found today
 
 05/12
-1. finished testing MAX9814
+1. finished testing the microphone
 2. merge mic_test, merge test to beta branch
 2. TODO: only 2 adc, what for processing MEMS MIC?
 3. TODO: MEMS MIC need a amp circuit
@@ -66,7 +66,5 @@
 
 06/04
 1. add execution time measurement
-2. fix the res_sum = 0.0 problem
-3. change the value of traffic to double type
+2. fix traffic computation problem
 4. change recording time to 15 seconds
-4. finished slides
