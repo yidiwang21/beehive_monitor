@@ -18,7 +18,7 @@ if bluetoothSerial:
 def writeToFile():
     fw = csv.writer(csvfile)
     list = []
-    for cnt in range(0,6):
+    for cnt in range(0,8):
         data = bluetoothSerial.readline()
         data = data.replace("\r\n", "")
         print(str(data))

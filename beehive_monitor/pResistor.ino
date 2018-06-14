@@ -32,6 +32,10 @@ double getBaseline(void) {
 	return baseline;
 }
 
+double computeDiffBaseline(void) {
+	return pResistor[i].res - baseline;
+}
+
 double computeTraffic(void) {
 	if (res_sum_log - 5 < 0)
 		return 0;
@@ -118,6 +122,8 @@ void sendData(void) {
 	Bluetooth.println(res_sum);
 	Bluetooth.println("resistance difference: ");
 	Bluetooth.println(diff_sum);
+	Bluetooth.println("baseline difference: ");
+	Bluetooth.println(computeDiffBaseline());
 	flag = 1;
 }
 
@@ -128,5 +134,7 @@ void printData() {
 	Serial.println(res_sum);
 	Serial.print("resistance difference: ");
 	Serial.println(diff_sum);
+	Serial.println("baseline difference: ");
+	Serial.println(computeDiffBaseline());
 	Serial.println("============================================");
 }
