@@ -17,10 +17,21 @@ Pin 	o-----------.
 double res_sum = 0.0;
 double res_sum_log = 0.0;
 double diff_sum = 0.0;
+double baseline = 0.0;
 const double R_ref = 1000000;	// FIXME: 100k for testing, need precise value
 const double var_thresh = 100;	// FIXME
 
 //***************** Functions *******************
+double getBaseline(void) {
+	int n = 3600;
+	for (int i = 0; i < n; ++i) {
+		delay(1000);
+		baseline += computeMean();
+	}
+	baseline /= n;
+	return baseline;
+}
+
 double computeTraffic(void) {
 	if (res_sum_log - 5 < 0)
 		return 0;

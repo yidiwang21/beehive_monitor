@@ -92,6 +92,7 @@ void setup() {
 	delay(100);
 	Serial.println("Teensy Audio AudioMemory()");
     AudioMemory(60);	// FIXME
+	// getBaseline();
 }
 
 void loop() {
