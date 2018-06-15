@@ -33,7 +33,8 @@ double getBaseline(void) {
 }
 
 double computeDiffBaseline(void) {
-	return pResistor[i].res - baseline;
+	for (int i = 0; i < pResistor_UNIT_NUM; i++)
+		return computeMean() - baseline;
 }
 
 double computeTraffic(void) {
