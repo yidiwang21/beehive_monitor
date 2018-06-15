@@ -1,2 +1,2 @@
 # beehive_monitor
-This system is designed to monitor the health condition of a beehive and based on Teensy 3.6.
+This project is about the design of a beehive monitorthat  can  help  the  beekeepers  to  be  aware  of  the  health  stateof  a  beehive,  and  to  prevent  something  that  may  reduce  theproductivity  to  happen.  The  light  sensors  have  be  used  to  gettraffic  information  of  the  bees  at  the  entrance  of  the  beehive,and  a  microphone  to  monitor  colony  sound.  The  results  of  thetraffic  entrance  measurement  show  that  Based  on  the  theorysupports,  the  results  of  audio  spectrum  analysis  show  that  thedominant  frequencies  in  a  swarming  beehive  are  different  fromwhat  in  a  normal-state  beehive.
