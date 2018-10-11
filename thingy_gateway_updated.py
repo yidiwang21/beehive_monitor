@@ -63,9 +63,6 @@ def thingyPoller():
                 print("# The new device is named {}".format(new_device[1]))
                 device_list.append(new_device)
                 # Writing the new device info to table file
-# added new dev to the list 
-a# TODO: write the new dev info to the csv file
-# study the code of connecting thingy
                 try:
                     device_data = open(DEVICE_LIST_FILE_NAME, "a")
                     device_data.write(','.join(new_device))
@@ -87,8 +84,8 @@ a# TODO: write the new dev info to the csv file
                     hum_val = 0
                     co2_val = 0
                     tvoc_val = 0
-                    pressure_bal = Peripheral
-                    battery_val = 0Peripheral
+                    pressure_bal = 0
+                    battery_val = 0
                     MAC_ADDRESS = device_list[index][2]
                     device_name = device_list[index][1]
                     # RPI connects to thingy and then disconnect
@@ -160,10 +157,10 @@ a# TODO: write the new dev info to the csv file
 
                     iso = time.asctime(time.gmtime()) # UTC
                     battery_val = thingy.battery.read()
-                    print("{} Battery: {}".format(session, battery_val))
+                    print("{} Battery: {}".format(device_name, battery_val))
                     json_body = [
                         {
-                            "measurement": session,
+                            "measurement": device_name,
                             "tags": {
                                 "run": runNo,
                             },
@@ -184,15 +181,143 @@ a# TODO: write the new dev info to the csv file
                         client.write_points(json_body)
                     except:
                         print("# cannot connect to InfluxDB - {}".format(session))
-                        pass
-                        # TODO: disconnect thingy, in which scope?
+                idx += 1
+                        # FIXME: disconnect thingy, in which scope?
+    print()
+    print("# Disconnecting...")
+    thingy.disconnect()
 
+# Create the InfluxDB object
+client = InfluxDBClient(host, port, user, password, dbname, timeout = 3)
 
+print("# Creating new delegate class to handle notifications...")
+class SampleDelegate(btle.DefaultDelegate):
+    def handleNotification(self, hnd, data):
+        if (hnd == thingy52.e_temperature_handle):
+            print("Notification: Temperature received: {}".format(repr(data)))
+        if (hnd == thingy52.ui_button_handle):
+            print("Notification: Button press received: {}".format(repr(data)))
 
-
-
-                    
-
-
-
+class MyDelegate(btle.DefaultDelegate):
     
+    def handleNotification(self, hnd, data):
+        global temp_val, hum_val, co2_val, tvoc_val, pressure_val
+        #Debug print repr(data)
+        if (hnd == thingy52.e_temperature_handle):
+            teptep = binascii.b2a_hex(data)
+	    temp_val = float("{}.{}".format(self._str_to_int(teptep[:-2]), int(teptep[-2:], 16)))
+            #print('Temp:  {} degCelcius'.format(temp_val))
+            #print('{},{}'.format(str(datetime.now()), temp_val), file = log_temp)
+            
+        elif (hnd == thingy52.e_pressure_handle):
+            pressure_int, pressure_dec = self._extract_pressure_data(data)
+            #print('Notification: Press received: {}.{} hPa'.format(
+            #            pressure_int, pressure_dec))
+	    pressure_val = float("{}.{}".format(pressure_int, pressure_dec))
+            #print('{}.{}'.format(str(datetime.now()), pressure_val), file = log_pressure)
+
+        elif (hnd == thingy52.e_humidity_handle):
+            teptep = binascii.b2a_hex(data)
+	    hum_val = int("{}".format(self._str_to_int(teptep)))
+            #print('Humidity: {} %'.format(hum_val))
+            #print('{},{}'.format(str(datetime.now()), hum_val), file = log_hum)
+
+        elif (hnd == thingy52.e_gas_handle):
+            eco2, tvoc = self._extract_gas_data(data)
+	    co2_val = eco2
+            tvoc_val = tvoc
+            #print('Gas: eCO2 ppm: {}, TVOC ppb: {} %'.format(eco2, tvoc))
+            #print('{},{}'.format(str(datetime.now()), co2_val), file = log_co2)
+            #print('{},{}'.format(str(datetime.now()), tvoc_val), file = log_tvoc)
+
+        elif (hnd == thingy52.e_color_handle):
+            teptep = binascii.b2a_hex(data)
+            print('Notification: Color: {}'.format(teptep))            
+
+        elif (hnd == thingy52.ui_button_handle):
+            teptep = binascii.b2a_hex(data)
+            print('Notification: Button state [1 -> released]: {}'.format(self._str_to_int(teptep)))
+
+        elif (hnd == thingy52.m_tap_handle):
+            direction, count = self._extract_tap_data(data)
+            print('Notification: Tap: direction: {}, count: {}'.format(direction, self._str_to_int(count)))
+
+        elif (hnd == thingy52.m_orient_handle):
+            teptep = binascii.b2a_hex(data)
+            print('Notification: Orient: {}'.format(teptep))
+
+        elif (hnd == thingy52.m_quaternion_handle):
+            teptep = binascii.b2a_hex(data)
+            print('Notification: Quaternion: {}'.format(teptep))
+
+        elif (hnd == thingy52.m_stepcnt_handle):
+            teptep = binascii.b2a_hex(data)
+            print('Notification: Step Count: {}'.format(teptep))
+
+        elif (hnd == thingy52.m_rawdata_handle):
+            teptep = binascii.b2a_hex(data)
+            print('Notification: Raw data: {}'.format(teptep))
+
+        elif (hnd == thingy52.m_euler_handle):
+            teptep = binascii.b2a_hex(data)
+            print('Notification: Euler: {}'.format(teptep))
+
+        elif (hnd == thingy52.m_rotation_handle):
+            teptep = binascii.b2a_hex(data)
+            print('Notification: Rotation matrix: {}'.format(teptep))
+
+        elif (hnd == thingy52.m_heading_handle):
+            teptep = binascii.b2a_hex(data)
+            print('Notification: Heading: {}'.format(teptep))
+
+        elif (hnd == thingy52.m_gravity_handle):
+            teptep = binascii.b2a_hex(data)
+            print('Notification: Gravity: {}'.format(teptep))        
+
+        elif (hnd == thingy52.s_speaker_status_handle):
+            teptep = binascii.b2a_hex(data)
+            print('Notification: Speaker Status: {}'.format(teptep))
+
+        elif (hnd == thingy52.s_microphone_handle):
+            teptep = binascii.b2a_hex(data)
+            print('Notification: Microphone: {}'.format(teptep))
+
+        else:
+            teptep = thingy52.binascii.b2a_hex(data)
+            print('Notification: UNKOWN: hnd {}, data {}'.format(hnd, teptep))
+            
+
+    def _str_to_int(self, s):
+        """ Transform hex str into int. """
+        i = int(s, 16)
+        if i >= 2**7:
+            i -= 2**8
+        return i    
+
+    def _extract_pressure_data(self, data):
+        """ Extract pressure data from data string. """
+        teptep = binascii.b2a_hex(data)
+        pressure_int = 0
+        for i in range(0, 4):
+                pressure_int += (int(teptep[i*2:(i*2)+2], 16) << 8*i)
+        pressure_dec = int(teptep[-2:], 16)
+        return (pressure_int, pressure_dec)
+
+    def _extract_gas_data(self, data):
+        """ Extract gas data from data string. """
+        teptep = binascii.b2a_hex(data)
+        eco2 = int(teptep[:2], 16) + (int(teptep[2:4], 16) << 8)
+        tvoc = int(teptep[4:6], 16) + (int(teptep[6:8], 16) << 8)
+        return eco2, tvoc
+
+    def _extract_tap_data(self, data):
+        """ Extract tap data from data string. """
+        teptep = binascii.b2a_hex(data)
+        direction = teptep[0:2]
+        count = teptep[2:4]
+        return (direction, count)
+
+print("# Searching for new device...")
+print()
+# Starting the sensorpoller function 
+thingyPoller()
