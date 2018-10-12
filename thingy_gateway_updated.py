@@ -41,6 +41,7 @@ def thingyPoller():
 #    print("searching for new device ...")
     devices = scanner.scan(timeout = 5)
     #    print("{} devices found!".format(len(devices)))
+    flag = 0
     if (devices!=[]):
 #==============================================================================
         for dev in devices:
@@ -48,43 +49,53 @@ def thingyPoller():
             for (adtype, desc, value) in dev.getScanData():
                 #print("  {}, {} = {}".format(adtype, desc, value))
                 #if (value == "Thingy"):
-                idx = 0
-                while idx < len(device_list):
-                    if device_list[idx][2] == dev.addr:  
+                index = 0
+                while index < len(device_list):
+                    if device_list[index][2] == dev.addr:  
+                        flag = 1
                         break
-                    idx += 1
+                    index += 1
                 else: # when none of the previous devices are matched
-                print("# Thingy ({}) found with address: {}".format(value, dev.addr))
-                device_counter += 1
-                new_device = [str(device_counter),
-                    DEVICE_NAME+str(device_counter).zfill(2),
-                    dev
-                    ]
-                print("# The new device is named {}".format(new_device[1]))
-                device_list.append(new_device)
-                # Writing the new device info to table file
-                try:
-                    device_data = open(DEVICE_LIST_FILE_NAME, "a")
-                    device_data.write(','.join(new_device))
-                    device_data.write("\n")
-                    device_data.flush()    
-                    device_data.close()
-                    print("# Writing to the file finished successfully")
-                except:
-                    print("# Error!!! File {} is not accessible!"\
-                    .format(DEVICE_LIST_FILE_NAME))
-                print()
+                    if "Thingy" in value:
+                        flag = 1
+                        print("# Thingy ({}) found with address: {}".format(value, dev.addr))
+                        device_counter += 1
+                        new_device = [str(device_counter),
+                            DEVICE_NAME+str(device_counter).zfill(2),
+                            dev.addr
+                            ]
+                        print("# The new device is named {}".format(new_device[1]))
+                        device_list.append(new_device)
+                        # Writing the new device info to table file
+                        try:
+                            device_data = open(DEVICE_LIST_FILE_NAME, "a")
+                            device_data.write(','.join(new_device))
+                            device_data.write("\n")
+                            device_data.flush()    
+                            device_data.close()
+                            print("# Writing to the file finished successfully")
+                        except:
+                            print("# Error!!! File {} is not accessible!"\
+                            .format(DEVICE_LIST_FILE_NAME))
+                        print()
+        
+        if flag == 0:
+            print("Thingy not found, please try again.")
+            exit()
 #==============================================================================        
         # Gathering information from each available device
+        # TODO: testing thingy connection/dis
+        # TODO: testing db
+        # TODO: bash file
         for dev in devices:
-            idx = 0
-            while idx < len(device_Peripheral
-                if device_list[idx]Peripheralc addr in the list
+            index = 0
+            while index < len(device_list):
+                if device_list[index][2] == dev.addr:
                     temp_val = 0
                     hum_val = 0
                     co2_val = 0
                     tvoc_val = 0
-                    pressure_bal = 0
+                    press_val = 0
                     battery_val = 0
                     MAC_ADDRESS = device_list[index][2]
                     device_name = device_list[index][1]
@@ -180,8 +191,8 @@ def thingyPoller():
                     try:
                         client.write_points(json_body)
                     except:
-                        print("# cannot connect to InfluxDB - {}".format(session))
-                idx += 1
+                        print("# cannot connect to InfluxDB - {}".format(device_name))
+                index += 1
                         # FIXME: disconnect thingy, in which scope?
     print()
     print("# Disconnecting...")
@@ -190,6 +201,7 @@ def thingyPoller():
 # Create the InfluxDB object
 client = InfluxDBClient(host, port, user, password, dbname, timeout = 3)
 
+# ==========================================================================
 print("# Creating new delegate class to handle notifications...")
 class SampleDelegate(btle.DefaultDelegate):
     def handleNotification(self, hnd, data):
@@ -317,7 +329,37 @@ class MyDelegate(btle.DefaultDelegate):
         count = teptep[2:4]
         return (direction, count)
 
+# ==========================================================================
+# Creating the device list file if it does not exist
+if (os.path.isfile(DEVICE_LIST_FILE_NAME) == False):
+    device_data = open(DEVICE_LIST_FILE_NAME, "w")
+    device_data.write("Number,Device Name,MAC Address")
+    device_data.write("\n")
+    device_data.flush()    
+    device_data.close()
+
+device_data = open(DEVICE_LIST_FILE_NAME, "r")
+
+first_line = 1
+device_list = []
+device_counter = 0;
+for line in device_data:
+    # Split strings which are seperated with ','
+    line_data = line.split(',')
+    # Remove '\n' at the end of each line
+    line_data[-1] = line_data[-1][:len(line_data[-1])-1]
+
+    # To prevent putting the header to the list
+    if (first_line == 1):
+        first_line = 0
+    else:
+        # Check if the line is valid (and not empty) before adding it 
+        # to the device list
+        if (line_data[0] == str(device_counter+1)):
+            device_list.append(line_data)
+            device_counter+=1
+
 print("# Searching for new device...")
 print()
-# Starting the sensorpoller function 
+
 thingyPoller()
