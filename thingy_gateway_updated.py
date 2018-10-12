@@ -95,7 +95,7 @@ def thingyPoller():
                     hum_val = 0
                     co2_val = 0
                     tvoc_val = 0
-                    press_val = 0
+                    pressure_val = 0
                     battery_val = 0
                     MAC_ADDRESS = device_list[index][2]
                     device_name = device_list[index][1]
@@ -133,7 +133,7 @@ def thingyPoller():
                     
                     thingy.waitForNotifications(timeout = 5)
                     d = datetime.now()
-                    runNo = now.strftime("%Y%m%d")
+                    runNo = d.strftime("%Y%m%d")
                     log_filename = "log_{}_{}.csv".format(device_name, runNo)
 
                     if (os.path.isfile(log_filename) == True):    
@@ -342,7 +342,7 @@ device_data = open(DEVICE_LIST_FILE_NAME, "r")
 
 first_line = 1
 device_list = []
-device_counter = 0;
+device_counter = 0
 for line in device_data:
     # Split strings which are seperated with ','
     line_data = line.split(',')
