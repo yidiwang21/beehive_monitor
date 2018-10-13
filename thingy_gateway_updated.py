@@ -10,8 +10,8 @@ from datetime import datetime
 from influxdb import InfluxDBClient
 import threading
 
-host = "192.168.1.26"
-#host = "rten.ucr.edu"
+host = "localhost"
+# host = "rten.ucr.edu"
 port = 8086
 user = "rtenlab"
 password = "sensor4world!!"
@@ -22,7 +22,7 @@ MAC_ADDRESS = None
 
 DEVICE_NAME = 'Thingy'
 DEVICE_LIST_FILE_NAME = "thingy_list.csv"
-REPEAT_TIME = 300
+REPEAT_TIME = 60    # FIXME: 300
 
 print("# Looking for Thingy advertisement...")
 scanner = btle.Scanner()
@@ -34,6 +34,8 @@ def thingyPoller():
     global DEVICE_LIST_FILE_NAME
     global client
     global REPEAT_TIME
+
+    global temp_val, hum_val, co2_val, tvoc_val, pressure_val
     
     # do it every "REPEAT_TIME" seconds
     threading.Timer(REPEAT_TIME, thingyPoller).start()
@@ -88,6 +90,7 @@ def thingyPoller():
             index = 0
             while index < len(device_list):
                 if device_list[index][2] == dev.addr:
+                    # FIXME: init
                     temp_val = 0
                     hum_val = 0
                     co2_val = 0
@@ -129,6 +132,14 @@ def thingyPoller():
                     # thingy.waitForNotifications(timeout=5)
                     
                     thingy.waitForNotifications(timeout = 5)
+                    # FIXME: db doesn't accept float!
+                    temp_val = int(temp_val)
+                    hum_val = int(hum_val)
+                    co2_val = int(co2_val)
+                    tvoc_val = int(tvoc_val)
+                    pressure_val = int(pressure_val)
+                    battery_val = int(battery_val)
+
                     d = datetime.now()
                     runNo = d.strftime("%Y%m%d")
                     log_filename = "log_{}_{}.csv".format(device_name, runNo)
@@ -161,7 +172,6 @@ def thingyPoller():
                         pressure_val),
                         file = log_data)
                     log_data.flush()
-                    log_data.close()
 
                     iso = time.asctime(time.gmtime()) # UTC
                     battery_val = thingy.battery.read()
@@ -185,9 +195,9 @@ def thingyPoller():
                             }
                         }
                     ]
+
                     try:
                         print("Connecting to {}....\n".format(host))
-                        print()
                         client.write_points(json_body)
                     except:
                         print("# cannot connect to InfluxDB - {}".format(device_name))
@@ -218,7 +228,8 @@ class MyDelegate(btle.DefaultDelegate):
         #Debug print repr(data)
         if (hnd == thingy52.e_temperature_handle):
             teptep = binascii.b2a_hex(data)
-	    temp_val = float("{}.{}".format(self._str_to_int(teptep[:-2]), int(teptep[-2:], 16)))
+            temp_val = float("{}.{}".format(self._str_to_int(teptep[:-2]), int(teptep[-2:], 16)))
+            print("temp_val: {}".format(temp_val))
             #print('Temp:  {} degCelcius'.format(temp_val))
             #print('{},{}'.format(str(datetime.now()), temp_val), file = log_temp)
             
@@ -226,19 +237,23 @@ class MyDelegate(btle.DefaultDelegate):
             pressure_int, pressure_dec = self._extract_pressure_data(data)
             #print('Notification: Press received: {}.{} hPa'.format(
             #            pressure_int, pressure_dec))
-	    pressure_val = float("{}.{}".format(pressure_int, pressure_dec))
+            pressure_val = float("{}.{}".format(pressure_int, pressure_dec))
+            print("pressure_val: {}".format(pressure_val))
             #print('{}.{}'.format(str(datetime.now()), pressure_val), file = log_pressure)
 
         elif (hnd == thingy52.e_humidity_handle):
             teptep = binascii.b2a_hex(data)
-	    hum_val = int("{}".format(self._str_to_int(teptep)))
+            hum_val = int("{}".format(self._str_to_int(teptep)))
+            print("hum_val: {}".format(hum_val))
             #print('Humidity: {} %'.format(hum_val))
             #print('{},{}'.format(str(datetime.now()), hum_val), file = log_hum)
 
         elif (hnd == thingy52.e_gas_handle):
             eco2, tvoc = self._extract_gas_data(data)
-	    co2_val = eco2
+            co2_val = eco2
             tvoc_val = tvoc
+            print("co2_val: {}".format(co2_val))
+            print("tvoc_val: {}".format(tvoc_val))
             #print('Gas: eCO2 ppm: {}, TVOC ppb: {} %'.format(eco2, tvoc))
             #print('{},{}'.format(str(datetime.now()), co2_val), file = log_co2)
             #print('{},{}'.format(str(datetime.now()), tvoc_val), file = log_tvoc)
@@ -316,7 +331,7 @@ class MyDelegate(btle.DefaultDelegate):
         pressure_dec = int(teptep[-2:], 16)
         return (pressure_int, pressure_dec)
 
-    def _extract_gas_data(self, data):
+    def _extnract_gas_data(self, data):
         """ Extract gas data from data string. """
         teptep = binascii.b2a_hex(data)
         eco2 = int(teptep[:2], 16) + (int(teptep[2:4], 16) << 8)
