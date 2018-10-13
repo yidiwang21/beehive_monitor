@@ -81,12 +81,9 @@ def thingyPoller():
         
         if flag == 0:
             print("Thingy not found, please try again.")
-            exit()
+            sys.exit() 
 #==============================================================================        
         # Gathering information from each available device
-        # TODO: testing thingy connection/dis
-        # TODO: testing db
-        # TODO: bash file
         for dev in devices:
             index = 0
             while index < len(device_list):
@@ -192,11 +189,13 @@ def thingyPoller():
                         client.write_points(json_body)
                     except:
                         print("# cannot connect to InfluxDB - {}".format(device_name))
+                    
+                    print("# Disconnecting...")
+                    thingy.disconnect()
+                    del thingy
                 index += 1
-                        # FIXME: disconnect thingy, in which scope?
-    print()
-    print("# Disconnecting...")
-    thingy.disconnect()
+    
+        print()
 
 # Create the InfluxDB object
 client = InfluxDBClient(host, port, user, password, dbname, timeout = 3)
