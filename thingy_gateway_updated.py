@@ -10,7 +10,7 @@ from datetime import datetime
 from influxdb import InfluxDBClient
 import threading
 
-host = "localhost"
+host = "192.168.1.26"
 #host = "rten.ucr.edu"
 port = 8086
 user = "rtenlab"
@@ -186,6 +186,8 @@ def thingyPoller():
                         }
                     ]
                     try:
+                        print("Connecting to {}....\n".format(host))
+                        print()
                         client.write_points(json_body)
                     except:
                         print("# cannot connect to InfluxDB - {}".format(device_name))
