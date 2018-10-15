@@ -83,14 +83,13 @@ def thingyPoller():
         
         if flag == 0:
             print("Thingy not found, please try again.")
-            sys.exit() 
+            return
 #==============================================================================        
         # Gathering information from each available device
         for dev in devices:
             index = 0
             while index < len(device_list):
                 if device_list[index][2] == dev.addr:
-                    # FIXME: init
                     temp_val = 0
                     hum_val = 0
                     co2_val = 0
@@ -132,6 +131,11 @@ def thingyPoller():
                     # thingy.waitForNotifications(timeout=5)
                     
                     thingy.waitForNotifications(timeout = 5)
+                    print("{} temp_val: {}".format(device_name, temp_val))
+                    print("{} hum_val: {}".format(device_name, hum_val))
+                    print("{} co2_val: {}".format(device_name, co2_val))
+                    print("{} tvoc_val: {}".format(device_name, tvoc_val))
+                    print("{} pressure_val: {}".format(device_name, pressure_val))
                     # FIXME: db doesn't accept float!
                     temp_val = int(temp_val)
                     hum_val = int(hum_val)
@@ -197,12 +201,13 @@ def thingyPoller():
                     ]
 
                     try:
-                        print("Connecting to {}....\n".format(host))
+                        print("\n")
+                        print("# Connecting to {}....".format(host))
                         client.write_points(json_body)
                     except:
                         print("# cannot connect to InfluxDB - {}".format(device_name))
                     
-                    print("# Disconnecting...")
+                    print("# Disconnecting...\n")
                     thingy.disconnect()
                     del thingy
                 index += 1
@@ -229,7 +234,6 @@ class MyDelegate(btle.DefaultDelegate):
         if (hnd == thingy52.e_temperature_handle):
             teptep = binascii.b2a_hex(data)
             temp_val = float("{}.{}".format(self._str_to_int(teptep[:-2]), int(teptep[-2:], 16)))
-            print("temp_val: {}".format(temp_val))
             #print('Temp:  {} degCelcius'.format(temp_val))
             #print('{},{}'.format(str(datetime.now()), temp_val), file = log_temp)
             
@@ -238,13 +242,11 @@ class MyDelegate(btle.DefaultDelegate):
             #print('Notification: Press received: {}.{} hPa'.format(
             #            pressure_int, pressure_dec))
             pressure_val = float("{}.{}".format(pressure_int, pressure_dec))
-            print("pressure_val: {}".format(pressure_val))
             #print('{}.{}'.format(str(datetime.now()), pressure_val), file = log_pressure)
 
         elif (hnd == thingy52.e_humidity_handle):
             teptep = binascii.b2a_hex(data)
             hum_val = int("{}".format(self._str_to_int(teptep)))
-            print("hum_val: {}".format(hum_val))
             #print('Humidity: {} %'.format(hum_val))
             #print('{},{}'.format(str(datetime.now()), hum_val), file = log_hum)
 
@@ -252,8 +254,6 @@ class MyDelegate(btle.DefaultDelegate):
             eco2, tvoc = self._extract_gas_data(data)
             co2_val = eco2
             tvoc_val = tvoc
-            print("co2_val: {}".format(co2_val))
-            print("tvoc_val: {}".format(tvoc_val))
             #print('Gas: eCO2 ppm: {}, TVOC ppb: {} %'.format(eco2, tvoc))
             #print('{},{}'.format(str(datetime.now()), co2_val), file = log_co2)
             #print('{},{}'.format(str(datetime.now()), tvoc_val), file = log_tvoc)
