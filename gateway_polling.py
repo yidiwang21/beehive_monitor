@@ -22,7 +22,7 @@ MAC_ADDRESS = None
 
 DEVICE_NAME = 'Thingy'
 DEVICE_LIST_FILE_NAME = "thingy_list.csv"
-REPEAT_TIME = 60    # FIXME: 300
+REPEAT_TIME = 300
 
 print("# Looking for Thingy advertisement...")
 scanner = btle.Scanner()
