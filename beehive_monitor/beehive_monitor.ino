@@ -16,31 +16,9 @@
 #include <SerialFlash.h>
 #include <SoftwareSerial.h>
 
-#define pResistor_UNIT_NUM 1	// FIXME: for testing
-
 //***************** Variables *******************
 int recordingMode = 0;  // status: 0 = stop, 1 = recording
 int flag = 0;			// 1: finished pResistors; 2: finished recording audio; 3: finished sending audio file
-
-//****************** structs ********************
-struct PhotoResistors {
-	const int pin;	// photoresistors pin
-	double vol;
-	double res;
-	double res_log;
-};
-
-struct PhotoResistors pResistor[pResistor_UNIT_NUM] = {
-	{31, 0.0, 0.0, 0.0},
-	// {32, 0.0, 0.0, 0.0},
-	// {33, 0.0, 0.0, 0.0},
-};
-
-struct PhotoResistors prev_pResistor[pResistor_UNIT_NUM] = {
-	{31, 0.0, 0.0, 0.0},
-	// {32, 0.0, 0.0, 0.0},
-	// {33, 0.0, 0.0, 0.0},
-};
 
 //***************** Teensy Pins *****************
 const int ledPin = 13;	// default led pin
@@ -65,9 +43,7 @@ void setup() {
 	Bluetooth.begin(9600);
 	// Bluetooth.println("Hello Viewer!");
 //****************** Pin Mode *******************
-	pinMode(pResistor[0].pin, INPUT);
- 	// pinMode(pResistor[1].pin, INPUT);
- 	// pinMode(pResistor[2].pin, INPUT);
+	
 //***************** ADC Setups ******************
     // ADC1 //
 	// use adc1 to resolve adc0 audio input conflict
@@ -97,9 +73,5 @@ void setup() {
 
 void loop() {
 	audioRecording();
-	pResistorMonitor();
-	delay(15000);
-	pResistorMonitor();
-	delay(15000);
-	pResistorMonitor();
+	delay(45000);	// TODO: go to sleep mode
 }
