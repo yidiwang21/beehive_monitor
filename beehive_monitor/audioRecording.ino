@@ -83,7 +83,6 @@ void sendAudioFile(void) {
         Serial.println("Start sending audio file");
         while (audio_rec.available()) {
             Bluetooth.println(audio_rec.read());
-            Serial.println("fuck");
         }
         Serial.println("Finished");
         audio_rec.close();
