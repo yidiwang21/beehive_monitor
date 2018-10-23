@@ -11,8 +11,6 @@
 #include "src/drivers/microphone/audio_recording.h"
 #include "src/drivers/ble/ble.h"
 
-#define CONSOLE_MODE	1
-
 //***************** Variables *******************
 
 //***************** Teensy Pins *****************

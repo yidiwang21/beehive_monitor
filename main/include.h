@@ -12,4 +12,6 @@
 #include <SerialFlash.h>
 #include <SoftwareSerial.h>
 
+#define CONSOLE_MODE
+
 #endif

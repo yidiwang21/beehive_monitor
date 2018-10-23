@@ -25,14 +25,20 @@ void AudioClass::_setup(void) {};
 
 //***************** Functions *******************
 void AudioClass::startRecording(void) {
+#ifdef CONSOLE_MODE
     Serial.println("Start recording");
+#endif
     if (SD.exists("save.raw")) {
-        Serial.println("Remove existing file");
+#ifdef CONSOLE_MODE
+    Serial.println("Remove existing file");
+#endif
         SD.remove("save.raw");
     }
     audio_rec = SD.open("save.raw", FILE_WRITE);
     if(audio_rec) {
+#ifdef CONSOLE_MODE
         Serial.println("File successfully opened");
+#endif 
         queue1.begin();
         recordingMode = 1;
     }
@@ -62,7 +68,7 @@ void AudioClass::continueRecording(void) {
         elapsedMicros usec = 0;
         audio_rec.write(buffer, 512);  //256 or 512 (dudes code)
 
-#if CONSOLE_MODE
+#ifdef CONSOLE_MODE
         Serial.print("SD write, us=");
         Serial.println(usec);
 #endif
@@ -79,7 +85,7 @@ void AudioClass::audioRecording(void) {
         }else continueRecording();
     }
 
-#if CONSOLE_MODE
+#ifdef CONSOLE_MODE
     if (SD.exists("save.raw"))
         Serial.println("file exists");
     else Serial.println("file does not exist");
