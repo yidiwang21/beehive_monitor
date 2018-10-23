@@ -1,4 +1,4 @@
-/*
+  /*
  *
  * beehive_monitor.ino
  * Description: this page includes pins, setup, and the main loop
@@ -10,6 +10,7 @@
 
 #include "src/drivers/microphone/audio_recording.h"
 #include "src/drivers/ble/ble.h"
+#include "src/adc/adc.h"
 
 //***************** Variables *******************
 
@@ -21,7 +22,7 @@ const int SDCARD_MOSI_PIN = 11;
 const int SDCARD_SCK_PIN = 13;
 
 //***************** objects *****************
-ADC *adc = new ADC();	// adc object
+// ADC *adc = new ADC();	// adc object
 
 
 void setup() {
@@ -29,13 +30,15 @@ void setup() {
 //****************** Pin Mode *******************
 	
 //***************** ADC Setups ******************
+	BLE._setup();
+	_ADC._setup();
     // ADC1 //
 	// use adc1 to resolve adc0 audio input conflict
     // #if ADC_NUM_ADCS > 1
-    adc->setAveraging(16, ADC_1); // set number of averages
-    adc->setResolution(16, ADC_1); // set bits of resolution
-    adc->setConversionSpeed(ADC_CONVERSION_SPEED::MED_SPEED, ADC_1); // change the conversion speed
-    adc->setSamplingSpeed(ADC_SAMPLING_SPEED::MED_SPEED, ADC_1); // change the sampling speed
+    // adc->setAveraging(16, ADC_1); // set number of averages
+    // adc->setResolution(16, ADC_1); // set bits of resolution
+    // adc->setConversionSpeed(ADC_CONVERSION_SPEED::MED_SPEED, ADC_1); // change the conversion speed
+    // adc->setSamplingSpeed(ADC_SAMPLING_SPEED::MED_SPEED, ADC_1); // change the sampling speed
     // #endif
 //**************** SD Card Inits *****************
 	SPI.setMOSI(SDCARD_MOSI_PIN);
