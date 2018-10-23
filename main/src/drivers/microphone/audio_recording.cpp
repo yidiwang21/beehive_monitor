@@ -1,23 +1,30 @@
 /*
  *
- * audioRecording.ino
- * Description: this page includes pins, setup, and the main loop
- * Created on Apr 28, 2018
- *
- * convert a raw file to a wav file:
- * sox -t raw -b 16 -e signed-integer -r 22050 -c 2 save.raw output.wav
+ * audio_recording.cpp
+ * Description: 
+ * Created on Oct 22, 2018
  *
  */
+
+#include "../../../include.h"
+#include "audio_recording.h"
+
 //************ Audio System Design **************
-AudioInputAnalog         adc1;
+AudioInputAnalog         adc1;   // using adc0 of Teensy 3.6
 AudioRecordQueue         queue1;
 AudioConnection          patchCord2(adc1, queue1);
 
-//***************** Variables *******************
-File audio_rec;
+const int audioPin = 16;  // adc0 of Teensy 3.6
+const int audioTrigger = 0;
+
+AudioClass::AudioClass() {
+    recordingMode = 0;
+};
+
+void AudioClass::_setup(void) {};
 
 //***************** Functions *******************
-void startRecording(void) {
+void AudioClass::startRecording(void) {
     Serial.println("Start recording");
     if (SD.exists("save.raw")) {
         Serial.println("Remove existing file");
@@ -31,7 +38,8 @@ void startRecording(void) {
     }
 }
 
-void stopRecording(void) {
+
+void AudioClass::stopRecording(void) {
     Serial.println("Stop recording");
     queue1.end();
     if (recordingMode == 1) {
@@ -44,7 +52,7 @@ void stopRecording(void) {
     recordingMode = 0;
 }
 
-void continueRecording(void) {
+void AudioClass::continueRecording(void) {
     if (queue1.available() >= 2) {
         byte buffer[512];
         memcpy(buffer, queue1.readBuffer(), 256);
@@ -53,12 +61,15 @@ void continueRecording(void) {
         queue1.freeBuffer();
         elapsedMicros usec = 0;
         audio_rec.write(buffer, 512);  //256 or 512 (dudes code)
+
+#if CONSOLE_MODE
         Serial.print("SD write, us=");
         Serial.println(usec);
+#endif
     }
 }
 
-void audioRecording(void) {
+void AudioClass::audioRecording(void) {
     startRecording();
     unsigned long time = millis();
     while (true) {
@@ -67,26 +78,12 @@ void audioRecording(void) {
             break;
         }else continueRecording();
     }
-    // for testing
+
+#if CONSOLE_MODE
     if (SD.exists("save.raw"))
         Serial.println("file exists");
     else Serial.println("file does not exist");
-    flag = 2;
+#endif
 }
 
-void sendAudioFile(void) {
-    if (SD.exists("save.raw")) {
-        audio_rec = SD.open("save.raw");
-        Serial.println("File opened.");
-    }
-    if (audio_rec) {
-        Serial.println("Start sending audio file");
-        while (audio_rec.available()) {
-            Bluetooth.println(audio_rec.read());
-        }
-        Serial.println("Finished");
-        audio_rec.close();
-    }else
-        Serial.println("Error opening file!");
-    flag = 3;
-}
+AudioClass AudioRecorder = AudioClass();

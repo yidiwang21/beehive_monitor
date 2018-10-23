@@ -5,43 +5,29 @@
  * Created on Apr 27, 2018
  *
  */
-#include <Arduino.h>
-#include "TeensyThreads.h"
-#include <math.h>
-#include <ADC.h>
-#include <Audio.h>
-#include <Wire.h>
-#include <SPI.h>
-#include <SD.h>
-#include <SerialFlash.h>
-#include <SoftwareSerial.h>
+
+#include "include.h"
+
+#include "src/drivers/microphone/audio_recording.h"
+#include "src/drivers/ble/ble.h"
+
+#define CONSOLE_MODE	1
 
 //***************** Variables *******************
-int recordingMode = 0;  // status: 0 = stop, 1 = recording
-int flag = 0;			// 1: finished pResistors; 2: finished recording audio; 3: finished sending audio file
 
 //***************** Teensy Pins *****************
 const int ledPin = 13;	// default led pin
-
-const int audioRecorder = 16;
-const int audioTrigger = 0;
 
 const int SDCARD_CS_PIN = BUILTIN_SDCARD;	// 254?
 const int SDCARD_MOSI_PIN = 11;
 const int SDCARD_SCK_PIN = 13;
 
-// tried other rx tx pins, didn't work
-const int BT_RX = 9;
-const int BT_TX = 10;
-
 //***************** objects *****************
 ADC *adc = new ADC();	// adc object
-SoftwareSerial Bluetooth(BT_RX, BT_TX);	// RX, TX
+
 
 void setup() {
 	Serial.begin(9600);	// 57600
-	Bluetooth.begin(9600);
-	// Bluetooth.println("Hello Viewer!");
 //****************** Pin Mode *******************
 	
 //***************** ADC Setups ******************
@@ -72,6 +58,7 @@ void setup() {
 }
 
 void loop() {
-	audioRecording();
+	AudioRecorder.audioRecording();
+	BLE.sendAudiofile();
 	delay(45000);	// TODO: go to sleep mode
 }
