@@ -7,7 +7,7 @@ const int BT_RX = 9;
 const int BT_TX = 10;
 SoftwareSerial Bluetooth(BT_RX, BT_TX);	// RX, TX
 
-BleClass::BleClass() {};
+BleClass::BleClass() {}
 
 void BleClass::_setup() {
     Bluetooth.begin(9600);

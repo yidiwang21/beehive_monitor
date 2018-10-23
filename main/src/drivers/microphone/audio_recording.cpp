@@ -19,9 +19,15 @@ const int audioTrigger = 0;
 
 AudioClass::AudioClass() {
     recordingMode = 0;
-};
+}
 
-void AudioClass::_setup(void) {};
+void AudioClass::_setup(void) {
+#ifdef CONSOLE_MODE
+    delay(100);
+	Serial.println("Teensy Audio AudioMemory()");
+#endif
+    AudioMemory(60);	// FIXME: ???
+}
 
 //***************** Functions *******************
 void AudioClass::startRecording(void) {

@@ -1,14 +1,14 @@
 #include "adc.h"
 #include "../../include.h"
 
-void AdcClass::AdcClass() {
-    ADC *adc = new ADC();	// adc object
-    avg_num = 16;
-    resolution = 16;
-}
+const int avg_num = 16;
+const int resolution = 16;
+
+AdcClass::AdcClass() {}
 
 void AdcClass::_setup(void) {
-     // ADC1 //
+    ADC *adc = new ADC();	// adc object 
+    // ADC1 //
 	// use adc1 to resolve adc0 audio input conflict
     adc->setAveraging(avg_num, ADC_1); // set number of averages
     adc->setResolution(resolution, ADC_1); // set bits of resolution
