@@ -1,15 +1,16 @@
 #include "sd.h"
 #include "../../../include.h"
 
-const int SDCARD_CS_PIN = BUILTIN_SDCARD;	// 254?
-const int SDCARD_MOSI_PIN = 11;
-const int SDCARD_SCK_PIN = 13;
+#define SDCARD_CS_PIN   BUILTIN_SDCARD  // 254?
+// not actually used with Teensy 3.6
+// #define SDCARD_MOSI_PIN 11
+// #define SDCARD_SCK_PIN  13
 
 SdClass::SdClass() {}
 
 void SdClass::_setup(void) {
-	SPI.setMOSI(SDCARD_MOSI_PIN);
-	SPI.setSCK(SDCARD_SCK_PIN);
+	// SPI.setMOSI(SDCARD_MOSI_PIN);
+	// SPI.setSCK(SDCARD_SCK_PIN);
 	if (!(SD.begin(SDCARD_CS_PIN))) {	// stop here if no SD card, but print a message
     	while (true) {
 #ifndef CONSOLE_MODE

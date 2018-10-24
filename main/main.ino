@@ -1,5 +1,4 @@
 #include "include.h"
-
 #include "src/drivers/microphone/audio_recording.h"
 #include "src/drivers/ble/ble.h"
 #include "src/adc/adc.h"
@@ -18,5 +17,5 @@ void setup() {
 void loop() {
 	AudioRecorder.audioRecording();
 	BLE.sendAudiofile();
-	delay(45000);	// TODO: go to sleep mode
+	// TODO: go to sleep mode
 }

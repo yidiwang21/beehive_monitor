@@ -12,6 +12,8 @@
 #include <SerialFlash.h>
 #include <SoftwareSerial.h>
 
+#include "Adafruit_BLE_UART.h"
+
 #define CONSOLE_MODE
 
 #endif

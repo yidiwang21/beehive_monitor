@@ -19,6 +19,8 @@ public:
     void sendAudiofile(void);
     void _setup(void);
     File audio_rec;
+    String audio_str;
+    // TODO: converting raw file to a string
 
 private:
     void startRecording(void);
