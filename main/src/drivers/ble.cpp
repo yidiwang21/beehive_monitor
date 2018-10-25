@@ -1,6 +1,6 @@
 #include "ble.h"
-#include "../microphone/audiofile.h"
-#include "../../../include.h"
+#include "audiofile.h"
+#include "../../include.h"
 
 // tried other rx tx pins, didn't work
 // #define BT_RX   9

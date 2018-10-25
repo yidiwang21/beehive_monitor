@@ -1,5 +1,5 @@
 #include "sd.h"
-#include "../../../include.h"
+#include "../../include.h"
 
 // not actually used with Teensy 3.6
 // #define SDCARD_MOSI_PIN 11

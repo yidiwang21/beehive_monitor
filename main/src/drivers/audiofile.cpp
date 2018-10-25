@@ -6,7 +6,7 @@
  *
  */
 
-#include "../../../include.h"
+#include "../../include.h"
 #include "audiofile.h"
 
 //************ Audio System Design **************

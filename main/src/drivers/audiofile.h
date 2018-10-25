@@ -6,8 +6,8 @@
  *
  */
 
-#ifndef _AUDIO_RECORDING_H_
-#define _AUDIO_RECORDING_H_
+#ifndef _AUDIOFILE_H_
+#define _AUDIOFILE_H_
 
 #include <SD.h>
 #include <Audio.h>

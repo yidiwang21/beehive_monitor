@@ -1,8 +1,8 @@
 #include "include.h"
-#include "src/drivers/microphone/audiofile.h"
-#include "src/drivers/ble/ble.h"
+#include "src/drivers/audiofile.h"
+#include "src/drivers/ble.h"
 #include "src/adc/adc.h"
-#include "src/drivers/sd/sd.h"
+#include "src/drivers/sd.h"
 
 SnoozeAlarm alarm;
 SnoozeBlock config_teensy36(alarm);
@@ -18,11 +18,10 @@ void setup() {
 	alarm.setRtcTimer(SLEEP_TIME_HR, SLEEP_TIME_MIN, SLEEP_TIME_SEC);	// hours, minutes, seconds
 	Serial.begin(9600);
 	BLE._setup();
-	// FIXME: conflict with audio pin
-	// _ADC._setup();
+	// _ADC._setup();	// FIXME: conflict with audio pin
 	_SD._setup();
 	AudioRecorder._setup();
-
+	Serial.println("**********************************************")
 	// startup indicator
 	for (int i = 0; i < 1; i++) {
 		digitalWrite(LED_BUILTIN, HIGH); delay(200);
