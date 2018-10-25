@@ -7,22 +7,19 @@
  */
 
 #include "../../../include.h"
-#include "audio_recording.h"
+#include "audiofile.h"
 
 //************ Audio System Design **************
 AudioInputAnalog         adc1;   // using adc0 of Teensy 3.6
 AudioRecordQueue         queue1;
 AudioConnection          patchCord2(adc1, queue1);
 
-const int audioPin = 16;  // adc0 of Teensy 3.6
-const int audioTrigger = 0;
-
 AudioClass::AudioClass() {
     recordingMode = 0;
 }
 
 void AudioClass::_setup(void) {
-#ifdef CONSOLE_MODE
+#ifdef DEBUG
     delay(100);
 	Serial.println("Teensy Audio AudioMemory()");
 #endif
@@ -31,18 +28,18 @@ void AudioClass::_setup(void) {
 
 //***************** Functions *******************
 void AudioClass::startRecording(void) {
-#ifdef CONSOLE_MODE
+#ifdef DEBUG
     Serial.println("Start recording");
 #endif
     if (SD.exists("save.raw")) {
-#ifdef CONSOLE_MODE
+#ifdef DEBUG
     Serial.println("Remove existing file");
 #endif
         SD.remove("save.raw");
     }
     audio_rec = SD.open("save.raw", FILE_WRITE);
     if(audio_rec) {
-#ifdef CONSOLE_MODE
+#ifdef DEBUG
         Serial.println("File successfully opened");
 #endif 
         queue1.begin();
@@ -74,7 +71,7 @@ void AudioClass::continueRecording(void) {
         elapsedMicros usec = 0;
         audio_rec.write(buffer, 512);  //256 or 512 (dudes code)
 
-#ifdef CONSOLE_MODE
+#ifdef DEBUG
         Serial.print("SD write, us=");
         Serial.println(usec);
 #endif
@@ -91,11 +88,44 @@ void AudioClass::audioRecording(void) {
         }else continueRecording();
     }
 
-#ifdef CONSOLE_MODE
+#ifdef DEBUG
     if (SD.exists("save.raw"))
         Serial.println("file exists");
     else Serial.println("file does not exist");
 #endif
+}
+
+char* AudioClass::readRaw(void) {
+    char str[FILE_SIZE] = {'0'};   // 20 bytes to store the file
+    if (SD.exists("save.raw"))
+        audio_rec = SD.open("save.raw", FILE_READ);
+    if (audio_rec == NULL)
+        errorHalt("ERROR: File is empty!")
+    
+    int w = 0;
+    int i = -1;
+    int j = 0;
+    int r1 = 0, r2 = 0, l1 = 0, l2 = 0, l = 0, r = 0;
+    while (audio_rec.available()) {
+        w = audio_rec.read();
+        i++;
+        if (i == 0) r1 = (unsigned)w;
+        if (i == 1) { 
+            r2 = (unsigned)w;
+            r = (r2 << 8) + r1; // r1 | r2 << 8
+        }
+        if (i == 2) l1 = (unsigned)w;
+        if (i == 3) {
+            l2 = (unsigned)w;
+            l = (l2 << 8) + l1;
+            str[j++] = (char)(r && 0xff);
+            str[j++] = (char)((r >> 8) && 0xff);
+            str[j++] = (char)(l && 0xff);
+            str[j++] = (char)((l >> 8) && 0xff);
+            i = -1;
+        }
+    }
+    return str;
 }
 
 AudioClass AudioRecorder = AudioClass();

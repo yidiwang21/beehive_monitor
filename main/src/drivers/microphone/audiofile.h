@@ -11,6 +11,11 @@
 
 #include <SD.h>
 
+#define AUDIO_PIN       16  // adc0 of Teensy 3.6
+#define AUDIO_TRIGGER   0   // useless for now
+
+const unsigned long long FILE_SIZE = 10 * 1000 * 1000;
+
 class AudioClass
 {
 public:
@@ -18,14 +23,15 @@ public:
     void audioRecording(void);
     void sendAudiofile(void);
     void _setup(void);
+    char* readRaw(void);
     File audio_rec;
-    String audio_str;
     // TODO: converting raw file to a string
 
 private:
     void startRecording(void);
     void stopRecording(void);
     void continueRecording(void);    
+    size_t readField(File* file, char* str, size_t size, char* delim);
     int recordingMode;
 };
 

@@ -12,8 +12,11 @@
 #include <SerialFlash.h>
 #include <SoftwareSerial.h>
 
+#include <Snooze.h>
 #include "Adafruit_BLE_UART.h"
 
-#define CONSOLE_MODE
+#define DEBUG
+
+#define errorHalt(msg) {Serial.println(F(msg)); while(1);}
 
 #endif

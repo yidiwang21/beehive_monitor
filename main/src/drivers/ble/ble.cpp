@@ -1,5 +1,5 @@
 #include "ble.h"
-#include "../microphone/audio_recording.h"
+#include "../microphone/audiofile.h"
 #include "../../../include.h"
 
 // tried other rx tx pins, didn't work
@@ -26,18 +26,14 @@ void BleClass::_setup() {
 void BleClass::sendAudiofile(void) {
     // tell nRF8001 to process data
     BTLEserial.pollACI();
+    
+    char* str = AudioRecorder.readRaw();
     // need to convert the file to bytes, no more than 20 as defined 
     int8_t sendbuffer[20];
 
-    audio_rec = AudioRecorder.audio_rec;
-    if (SD.exists("save.raw")) {
-        audio_rec = SD.open("save.raw");
-    }
-    // TODO: sending every 20 bytes of the string (raw file)
-
     status = BTLEserial.getState();
     if (status != laststatus) {
-#ifdef CONSOLE_MODE
+#ifdef DEBUG
         if (status == ACI_EVT_DEVICE_STARTED) {
             Serial.println(F("* Advertising started"));
         }
@@ -62,18 +58,18 @@ void BleClass::sendAudiofile(void) {
     audio_rec = AudioRecorder.audio_rec;
     if (SD.exists("save.raw")) {
         audio_rec = SD.open("save.raw");
-#ifdef CONSOLE_MODE
+#ifdef DEBUG
         Serial.println("File opened.");
 #endif
     }
     if (audio_rec) {
-#ifdef CONSOLE_MODE
+#ifdef DEBUG
         Serial.println("Start sending audio file");
 #endif
         while (audio_rec.available()) {
             Bluetooth.println(audio_rec.read());
         }
-#ifdef CONSOLE_MODE
+#ifdef DEBUG
         Serial.println("Finished");
 #endif
         audio_rec.close();
