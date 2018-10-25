@@ -23,8 +23,6 @@ void BleClass::_setup() {
 }
 
 void BleClass::sendAudiofile(void) {
-    // tell nRF8001 to process data
-    BTLEserial.pollACI();
     Serial.println("Starting BLE...");
 
     File f;
@@ -38,33 +36,40 @@ void BleClass::sendAudiofile(void) {
     unsigned long i = 0;
     unsigned long cursorpos = 0;
 
-    aci_evt_opcode_t status = BTLEserial.getState();
+    unsigned long ble_start_time = millis();
     aci_evt_opcode_t laststatus = ACI_EVT_DISCONNECTED;
     
-    if (status != laststatus) {
-        if (status == ACI_EVT_DEVICE_STARTED) {
-            Serial.println(F("* Advertising started"));
+    while(millis() - ble_start_time < 60000) {    // FIXME: set 60 secs for file transmision
+        // tell nRF8001 to process data
+        BTLEserial.pollACI();
+        aci_evt_opcode_t status = BTLEserial.getState();
+        
+        if (status != laststatus) {
+            if (status == ACI_EVT_DEVICE_STARTED) {
+                Serial.println(F("* Advertising started"));
+            }
+            if (status == ACI_EVT_CONNECTED) {
+                Serial.println(F("* Connected!"));
+            }
+            if (status == ACI_EVT_DISCONNECTED) {
+                Serial.println(F("* Disconnected or advertising timed out"));
+            }
+            laststatus = status;
         }
+
         if (status == ACI_EVT_CONNECTED) {
-            Serial.println(F("* Connected!"));
-        }
-        if (status == ACI_EVT_DISCONNECTED) {
-            Serial.println(F("* Disconnected or advertising timed out"));
-        }
-        laststatus = status;
-    }
-    if (status == ACI_EVT_CONNECTED) {
-        while(!f.seek(cursorpos)) {
-            // wait for "ready to send" signal from rpi
-            while (BTLEserial.available()) {
-                char c = BTLEserial.read();
-                if (c == 'y') break;
-                // TODO: add timeout
-            }// ready to send, every 20 bytes
-            strcat((char*)byteBuf, str + (i * SEND_BUFFER_SIZE));
-            i++;
-            cursorpos += SEND_BUFFER_SIZE;
-            BTLEserial.write(byteBuf, SEND_BUFFER_SIZE);
+            while(!f.seek(cursorpos)) {
+                unsigned long tm_start = millis();
+                // wait for "ready to send" signal from rpi
+                while (BTLEserial.available() && millis() - tm_start < 100) {   // FIXME: 
+                    char c = BTLEserial.read();
+                    if (c == 'y') break;
+                }// ready to send, every 20 bytes
+                strcat((char*)byteBuf, str + (i * SEND_BUFFER_SIZE));
+                i++;
+                cursorpos += SEND_BUFFER_SIZE;
+                BTLEserial.write(byteBuf, SEND_BUFFER_SIZE);
+            }
         }
     }
 }

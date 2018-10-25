@@ -26,7 +26,7 @@ void AudioClass::_setup(void) {
     AudioMemory(60);	// FIXME: ???
 }
 
-//***************** Functions *******************
+// TODO: not overwrite file every time, keep max 10 files 
 void AudioClass::startRecording(void) {
     Serial.println("Start recording");
     if (SD.exists("save.raw")) {
