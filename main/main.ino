@@ -7,6 +7,8 @@
 SnoozeAlarm alarm;
 SnoozeBlock config_teensy36(alarm);
 
+#define DEBUG
+
 #define SLEEP_TIME_HR	0
 #define SLEEP_TIME_MIN	0
 #define SLEEP_TIME_SEC	10
@@ -14,11 +16,10 @@ SnoozeBlock config_teensy36(alarm);
 void setup() {
 	pinMode(LED_BUILTIN, OUTPUT);
 	alarm.setRtcTimer(SLEEP_TIME_HR, SLEEP_TIME_MIN, SLEEP_TIME_SEC);	// hours, minutes, seconds
-#ifdef DEBUG
 	Serial.begin(9600);
-#endif
 	BLE._setup();
-	_ADC._setup();
+	// FIXME: conflict with audio pin
+	// _ADC._setup();
 	_SD._setup();
 	AudioRecorder._setup();
 
@@ -30,8 +31,8 @@ void setup() {
 }
 
 void loop() {
-	int who;
-	who = Snooze.hibernate(config_teensy36);	// get into sleep for 10 min until wakeup
+	int who = 35;
+	// who = Snooze.hibernate(config_teensy36);	// get into sleep for 10 min until wakeup
 	if (who == 35){	// rtc wakeup value
 	// polling every 10 min
 		AudioRecorder.audioRecording();

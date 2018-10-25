@@ -4,6 +4,9 @@
 #include <SD.h>
 #include "Adafruit_BLE_UART.h"
 
+// need to convert the file to bytes, no more than 20 as defined 
+#define SEND_BUFFER_SIZE    20
+
 class BleClass
 {
 public:
@@ -13,8 +16,6 @@ public:
 
 private:
     File audio_rec;    
-    aci_evt_opcode_t laststatus;
-    aci_evt_opcode_t status;
 };
 
 extern BleClass BLE;

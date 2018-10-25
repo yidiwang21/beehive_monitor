@@ -12,15 +12,11 @@ void SdClass::_setup(void) {
 	// SPI.setSCK(SDCARD_SCK_PIN);
 	if (!(SD.begin(SDCARD_CS_PIN))) {	// stop here if no SD card, but print a message
     	while (true) {
-#ifndef DEBUG
       		Serial.println("Unable to access the SD card!");
-#endif
 			delay(200);
     	}
   	}else{
-#ifndef DEBUG
   		Serial.println("Successfully access the SD card!");
-#endif // 
     }
 }
 

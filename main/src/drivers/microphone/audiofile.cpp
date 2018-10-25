@@ -1,6 +1,6 @@
 /*
  *
- * audio_recording.cpp
+ * audiofile.cpp
  * Description: 
  * Created on Oct 22, 2018
  *
@@ -10,39 +10,33 @@
 #include "audiofile.h"
 
 //************ Audio System Design **************
-AudioInputAnalog         adc1;   // using adc0 of Teensy 3.6
-AudioRecordQueue         queue1;
-AudioConnection          patchCord2(adc1, queue1);
+AudioInputAnalog         audio_adc;   // using adc0 of Teensy 3.6
+AudioRecordQueue         audio_queue;
+AudioConnection          patchCord2(audio_adc, audio_queue);
+
+File audio_rec;
 
 AudioClass::AudioClass() {
     recordingMode = 0;
 }
 
 void AudioClass::_setup(void) {
-#ifdef DEBUG
     delay(100);
 	Serial.println("Teensy Audio AudioMemory()");
-#endif
     AudioMemory(60);	// FIXME: ???
 }
 
 //***************** Functions *******************
 void AudioClass::startRecording(void) {
-#ifdef DEBUG
     Serial.println("Start recording");
-#endif
     if (SD.exists("save.raw")) {
-#ifdef DEBUG
     Serial.println("Remove existing file");
-#endif
         SD.remove("save.raw");
     }
     audio_rec = SD.open("save.raw", FILE_WRITE);
     if(audio_rec) {
-#ifdef DEBUG
         Serial.println("File successfully opened");
-#endif 
-        queue1.begin();
+        audio_queue.begin();
         recordingMode = 1;
     }
 }
@@ -50,11 +44,11 @@ void AudioClass::startRecording(void) {
 
 void AudioClass::stopRecording(void) {
     Serial.println("Stop recording");
-    queue1.end();
+    audio_queue.end();
     if (recordingMode == 1) {
-        while (queue1.available() > 0) {
-            audio_rec.write((byte*)queue1.readBuffer(), 256);
-            queue1.freeBuffer();
+        while (audio_queue.available() > 0) {
+            audio_rec.write((byte*)audio_queue.readBuffer(), 256);
+            audio_queue.freeBuffer();
         }
         audio_rec.close();
     }
@@ -62,19 +56,16 @@ void AudioClass::stopRecording(void) {
 }
 
 void AudioClass::continueRecording(void) {
-    if (queue1.available() >= 2) {
+    if (audio_queue.available() >= 2) {
         byte buffer[512];
-        memcpy(buffer, queue1.readBuffer(), 256);
-        queue1.freeBuffer();
-        memcpy(buffer + 256, queue1.readBuffer(), 256);
-        queue1.freeBuffer();
+        memcpy(buffer, audio_queue.readBuffer(), 256);
+        audio_queue.freeBuffer();
+        memcpy(buffer + 256, audio_queue.readBuffer(), 256);
+        audio_queue.freeBuffer();
         elapsedMicros usec = 0;
         audio_rec.write(buffer, 512);  //256 or 512 (dudes code)
-
-#ifdef DEBUG
         Serial.print("SD write, us=");
         Serial.println(usec);
-#endif
     }
 }
 
@@ -88,26 +79,21 @@ void AudioClass::audioRecording(void) {
         }else continueRecording();
     }
 
-#ifdef DEBUG
     if (SD.exists("save.raw"))
         Serial.println("file exists");
     else Serial.println("file does not exist");
-#endif
 }
 
-char* AudioClass::readRaw(void) {
-    char str[FILE_SIZE] = {'0'};   // 20 bytes to store the file
-    if (SD.exists("save.raw"))
-        audio_rec = SD.open("save.raw", FILE_READ);
-    if (audio_rec == NULL)
-        errorHalt("ERROR: File is empty!")
+char* AudioClass::readRaw(File f) {
+    // char str[FILE_SIZE] = {'0'};   // 20 bytes to store the file
+    char* str;
     
     int w = 0;
     int i = -1;
     int j = 0;
     int r1 = 0, r2 = 0, l1 = 0, l2 = 0, l = 0, r = 0;
-    while (audio_rec.available()) {
-        w = audio_rec.read();
+    while (f.available()) {
+        w = f.read();
         i++;
         if (i == 0) r1 = (unsigned)w;
         if (i == 1) { 

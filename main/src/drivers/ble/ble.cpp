@@ -13,27 +13,35 @@
 
 Adafruit_BLE_UART BTLEserial = Adafruit_BLE_UART(ADAFRUITBLE_REQ, ADAFRUITBLE_RDY, ADAFRUITBLE_RST);
 
-BleClass::BleClass() {
-    laststatus = ACI_EVT_DISCONNECTED;
-}
+BleClass::BleClass() {}
 
 void BleClass::_setup() {
     // Bluetooth.begin(9600);
     // Bluetooth.println("Hello Viewer!");
+    Serial.println("Setup BLE...");
     BTLEserial.begin();
 }
 
 void BleClass::sendAudiofile(void) {
     // tell nRF8001 to process data
     BTLEserial.pollACI();
-    
-    char* str = AudioRecorder.readRaw();
-    // need to convert the file to bytes, no more than 20 as defined 
-    int8_t sendbuffer[20];
+    Serial.println("Starting BLE...");
 
-    status = BTLEserial.getState();
+    File f;
+    if (SD.exists("save.raw"))
+        f = SD.open("save.raw", FILE_READ);
+    if (f == NULL)
+        errorHalt("ERROR: File is empty!")
+    char* str = AudioRecorder.readRaw(f);
+    byte* byteBuf;
+
+    unsigned long i = 0;
+    unsigned long cursorpos = 0;
+
+    aci_evt_opcode_t status = BTLEserial.getState();
+    aci_evt_opcode_t laststatus = ACI_EVT_DISCONNECTED;
+    
     if (status != laststatus) {
-#ifdef DEBUG
         if (status == ACI_EVT_DEVICE_STARTED) {
             Serial.println(F("* Advertising started"));
         }
@@ -43,14 +51,22 @@ void BleClass::sendAudiofile(void) {
         if (status == ACI_EVT_DISCONNECTED) {
             Serial.println(F("* Disconnected or advertising timed out"));
         }
-#endif
         laststatus = status;
     }
     if (status == ACI_EVT_CONNECTED) {
-
+        while(!f.seek(cursorpos)) {
+            // wait for "ready to send" signal from rpi
+            while (BTLEserial.available()) {
+                char c = BTLEserial.read();
+                if (c == 'y') break;
+                // TODO: add timeout
+            }// ready to send, every 20 bytes
+            strcat((char*)byteBuf, str + (i * SEND_BUFFER_SIZE));
+            i++;
+            cursorpos += SEND_BUFFER_SIZE;
+            BTLEserial.write(byteBuf, SEND_BUFFER_SIZE);
+        }
     }
-
-  
 }
 
 // FIXME: 
