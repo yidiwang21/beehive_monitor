@@ -21,7 +21,7 @@ void setup() {
 	// _ADC._setup();	// FIXME: conflict with audio pin
 	_SD._setup();
 	AudioRecorder._setup();
-	Serial.println("**********************************************")
+	Serial.println("**********************************************");
 	// startup indicator
 	for (int i = 0; i < 1; i++) {
 		digitalWrite(LED_BUILTIN, HIGH); delay(200);

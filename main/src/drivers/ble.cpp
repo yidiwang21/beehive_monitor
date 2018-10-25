@@ -29,18 +29,32 @@ void BleClass::sendAudiofile(void) {
     if (SD.exists("save.raw"))
         f = SD.open("save.raw", FILE_READ);
     if (f == NULL)
-        errorHalt("ERROR: File is empty!")
-    char* str = AudioRecorder.readRaw(f);
-    byte* byteBuf;
+        errorHalt("ERROR: File is empty!");
+
+    Serial.print("STR_LENGTH: "); Serial.println(AudioRecorder.STR_LENGTH);
+    char *audio_str = (char*)malloc(AudioRecorder.STR_LENGTH * sizeof(char));
+    Serial.println(AudioRecorder.readRaw(f));
+    // FIXME: returned str len = 0
+    strcpy(audio_str, AudioRecorder.readRaw(f));
+    
+    Serial.print("str length = "); Serial.println(strlen(audio_str));
+
+    Serial.print("File size: "); Serial.print(f.size()); Serial.println(" bytes");
+    Serial.println("raw file reading finished.");
+
+    byte byteBuf[SEND_BUFFER_SIZE];
 
     unsigned long i = 0;
     unsigned long cursorpos = 0;
-
     unsigned long ble_start_time = millis();
     aci_evt_opcode_t laststatus = ACI_EVT_DISCONNECTED;
+    // BTLEserial.pollACI();
     
-    while(millis() - ble_start_time < 60000) {    // FIXME: set 60 secs for file transmision
+    // while(millis() - ble_start_time < 60000) {    // FIXME: set 60 secs for file transmision
+    while (true) {
         // tell nRF8001 to process data
+    
+    
         BTLEserial.pollACI();
         aci_evt_opcode_t status = BTLEserial.getState();
         
@@ -58,18 +72,22 @@ void BleClass::sendAudiofile(void) {
         }
 
         if (status == ACI_EVT_CONNECTED) {
-            while(!f.seek(cursorpos)) {
+            while(cursorpos < f.size()) {
                 unsigned long tm_start = millis();
                 // wait for "ready to send" signal from rpi
-                while (BTLEserial.available() && millis() - tm_start < 100) {   // FIXME: 
+                while (BTLEserial.available()) {   // FIXME: 
+                    Serial.println("ggggggggg");
                     char c = BTLEserial.read();
                     if (c == 'y') break;
                 }// ready to send, every 20 bytes
-                strcat((char*)byteBuf, str + (i * SEND_BUFFER_SIZE));
+                strcat((char*)byteBuf, audio_str + (i * SEND_BUFFER_SIZE));
                 i++;
                 cursorpos += SEND_BUFFER_SIZE;
+                Serial.print("cursorpos: "); Serial.println(cursorpos);
                 BTLEserial.write(byteBuf, SEND_BUFFER_SIZE);
+                delay(10);
             }
+            Serial.println("111111111111111111111111");
         }
     }
 }

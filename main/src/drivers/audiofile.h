@@ -17,7 +17,7 @@
 
 #define DEBUG
 
-const unsigned long long FILE_SIZE = 10 * 1000 * 1000;
+#define MAX_FILE_SIZE 10 * 1000 * 1000
 
 class AudioClass
 {
@@ -27,6 +27,7 @@ public:
     void sendAudiofile(void);
     void _setup(void);
     char* readRaw(File f);
+    unsigned long STR_LENGTH;
     // TODO: test converted raw file string
 
 private:

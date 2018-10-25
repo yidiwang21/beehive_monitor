@@ -9,6 +9,8 @@
 #include "../../include.h"
 #include "audiofile.h"
 
+#define REC_TIME    5000
+
 //************ Audio System Design **************
 AudioInputAnalog         audio_adc;   // using adc0 of Teensy 3.6
 AudioRecordQueue         audio_queue;
@@ -73,7 +75,7 @@ void AudioClass::audioRecording(void) {
     startRecording();
     unsigned long time = millis();
     while (true) {
-        if(millis() - time > 15000 && recordingMode == 1) {
+        if(millis() - time > REC_TIME && recordingMode == 1) {
             stopRecording();
             break;
         }else continueRecording();
@@ -85,17 +87,17 @@ void AudioClass::audioRecording(void) {
 }
 
 char* AudioClass::readRaw(File f) {
-    // char str[FILE_SIZE] = {'0'};   // 20 bytes to store the file
-    char* str;
+    char audio_str[MAX_FILE_SIZE] = {'0'};   // 20 bytes to store the file
     
+    int k = 0;
     int w = 0;
     int i = -1;
     int j = 0;
     int r1 = 0, r2 = 0, l1 = 0, l2 = 0, l = 0, r = 0;
     while (f.available()) {
-        w = f.read();
-        i++;
-        if (i == 0) r1 = (unsigned)w;
+        // w = f.read();
+        // i++;
+        /* if (i == 0) r1 = (unsigned)w;
         if (i == 1) { 
             r2 = (unsigned)w;
             r = (r2 << 8) + r1; // r1 | r2 << 8
@@ -109,9 +111,17 @@ char* AudioClass::readRaw(File f) {
             str[j++] = (char)(l && 0xff);
             str[j++] = (char)((l >> 8) && 0xff);
             i = -1;
-        }
+        } */
+        byte msb = f.read();
+        byte lsb = f.read();
+        int val = (msb << 8) + lsb;
+        audio_str[k] = (char)(val & 0xff);
+        Serial.print(audio_str[k]);
+        audio_str[++k] = (char)((val >> 8) & 0xff);
+        Serial.println(audio_str[k]);
     }
-    return str;
+    Serial.print("k = "); Serial.print(k);
+    STR_LENGTH = k;
 }
 
 AudioClass AudioRecorder = AudioClass();
