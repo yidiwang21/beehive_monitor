@@ -1,4 +1,4 @@
-/*
+    /*
  *
  * audiofile.cpp
  * Description: 
@@ -66,8 +66,10 @@ void AudioClass::continueRecording(void) {
         audio_queue.freeBuffer();
         elapsedMicros usec = 0;
         audio_rec.write(buffer, 512);  //256 or 512 (dudes code)
+#ifdef AUDIO_DEBUG
         Serial.print("SD write, us=");
         Serial.println(usec);
+#endif 
     }
 }
 
@@ -86,7 +88,7 @@ void AudioClass::audioRecording(void) {
     else Serial.println("file does not exist");
 }
 
-char* AudioClass::readRaw(File f) {
+/* char* AudioClass::readRaw(File f) {
     char audio_str[MAX_FILE_SIZE] = {'0'};   // 20 bytes to store the file
     
     int k = 0;
@@ -95,23 +97,6 @@ char* AudioClass::readRaw(File f) {
     int j = 0;
     int r1 = 0, r2 = 0, l1 = 0, l2 = 0, l = 0, r = 0;
     while (f.available()) {
-        // w = f.read();
-        // i++;
-        /* if (i == 0) r1 = (unsigned)w;
-        if (i == 1) { 
-            r2 = (unsigned)w;
-            r = (r2 << 8) + r1; // r1 | r2 << 8
-        }
-        if (i == 2) l1 = (unsigned)w;
-        if (i == 3) {
-            l2 = (unsigned)w;
-            l = (l2 << 8) + l1;
-            str[j++] = (char)(r && 0xff);
-            str[j++] = (char)((r >> 8) && 0xff);
-            str[j++] = (char)(l && 0xff);
-            str[j++] = (char)((l >> 8) && 0xff);
-            i = -1;
-        } */
         byte msb = f.read();
         byte lsb = f.read();
         int val = (msb << 8) + lsb;
@@ -123,5 +108,6 @@ char* AudioClass::readRaw(File f) {
     Serial.print("k = "); Serial.print(k);
     STR_LENGTH = k;
 }
+ */
 
 AudioClass AudioRecorder = AudioClass();

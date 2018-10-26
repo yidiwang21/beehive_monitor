@@ -10,8 +10,8 @@ SnoozeBlock config_teensy36(alarm);
 #define DEBUG
 
 #define SLEEP_TIME_HR	0
-#define SLEEP_TIME_MIN	0
-#define SLEEP_TIME_SEC	10
+#define SLEEP_TIME_MIN	10
+#define SLEEP_TIME_SEC	0
 
 void setup() {
 	pinMode(LED_BUILTIN, OUTPUT);

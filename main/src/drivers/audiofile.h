@@ -15,7 +15,7 @@
 #define AUDIO_PIN       16  // adc0 of Teensy 3.6
 #define AUDIO_TRIGGER   0   // useless for now
 
-#define DEBUG
+// #define AUDIO_DEBUG
 
 #define MAX_FILE_SIZE 10 * 1000 * 1000
 
@@ -26,9 +26,7 @@ public:
     void audioRecording(void);
     void sendAudiofile(void);
     void _setup(void);
-    char* readRaw(File f);
-    unsigned long STR_LENGTH;
-    // TODO: test converted raw file string
+    // char* readRaw(File f);
 
 private:
     void startRecording(void);

@@ -31,20 +31,15 @@ void BleClass::sendAudiofile(void) {
     if (f == NULL)
         errorHalt("ERROR: File is empty!");
 
-    Serial.print("STR_LENGTH: "); Serial.println(AudioRecorder.STR_LENGTH);
-    char *audio_str = (char*)malloc(AudioRecorder.STR_LENGTH * sizeof(char));
-    Serial.println(AudioRecorder.readRaw(f));
-    // FIXME: returned str len = 0
-    strcpy(audio_str, AudioRecorder.readRaw(f));
+    // char *audio_str = (char*)malloc(AudioRecorder.STR_LENGTH * sizeof(char));
+    // Serial.println(AudioRecorder.readRaw(f));
+    // strcpy(audio_str, AudioRecorder.readRaw(f));
     
-    Serial.print("str length = "); Serial.println(strlen(audio_str));
-
+    // Serial.print("str length = "); Serial.println(strlen(audio_str));
     Serial.print("File size: "); Serial.print(f.size()); Serial.println(" bytes");
-    Serial.println("raw file reading finished.");
 
     byte byteBuf[SEND_BUFFER_SIZE];
 
-    unsigned long i = 0;
     unsigned long cursorpos = 0;
     unsigned long ble_start_time = millis();
     aci_evt_opcode_t laststatus = ACI_EVT_DISCONNECTED;
@@ -53,66 +48,44 @@ void BleClass::sendAudiofile(void) {
     // while(millis() - ble_start_time < 60000) {    // FIXME: set 60 secs for file transmision
     while (true) {
         // tell nRF8001 to process data
-    
-    
         BTLEserial.pollACI();
         aci_evt_opcode_t status = BTLEserial.getState();
         
         if (status != laststatus) {
-            if (status == ACI_EVT_DEVICE_STARTED) {
+            if (status == ACI_EVT_DEVICE_STARTED)
                 Serial.println(F("* Advertising started"));
-            }
-            if (status == ACI_EVT_CONNECTED) {
+            if (status == ACI_EVT_CONNECTED)
                 Serial.println(F("* Connected!"));
-            }
-            if (status == ACI_EVT_DISCONNECTED) {
+            if (status == ACI_EVT_DISCONNECTED)
                 Serial.println(F("* Disconnected or advertising timed out"));
-            }
             laststatus = status;
         }
 
+        // TODO: resuming transmision if disconnected
         if (status == ACI_EVT_CONNECTED) {
-            while(cursorpos < f.size()) {
+            while(f.available()) {
+                BTLEserial.pollACI();
                 unsigned long tm_start = millis();
                 // wait for "ready to send" signal from rpi
-                while (BTLEserial.available()) {   // FIXME: 
-                    Serial.println("ggggggggg");
-                    char c = BTLEserial.read();
-                    if (c == 'y') break;
-                }// ready to send, every 20 bytes
-                strcat((char*)byteBuf, audio_str + (i * SEND_BUFFER_SIZE));
-                i++;
+                // while (BTLEserial.available()) {   // FIXME: 
+                //     char c = BTLEserial.read();
+                //     if (c == 'y') break;
+                // }// ready to send, every 20 bytes
+                for (int i = 0; i < SEND_BUFFER_SIZE; i = i + 2) {
+                    byte msb = f.read();
+                    byte lsb = f.read();
+                    byteBuf[i] = msb; 
+                    byteBuf[i+1]  = lsb;
+                }
+                // strcat((char*)byteBuf, audio_str + (i * SEND_BUFFER_SIZE));
                 cursorpos += SEND_BUFFER_SIZE;
-                Serial.print("cursorpos: "); Serial.println(cursorpos);
+                // Serial.print("cursorpos: "); Serial.println(cursorpos);
                 BTLEserial.write(byteBuf, SEND_BUFFER_SIZE);
-                delay(10);
             }
-            Serial.println("111111111111111111111111");
+            Serial.print("Total transmision time: "); Serial.println(millis() - ble_start_time);
+            break;
         }
     }
 }
-
-// FIXME: 
-/* void BleClass::sendAudiofile(void) {
-    audio_rec = AudioRecorder.audio_rec;
-    if (SD.exists("save.raw")) {
-        audio_rec = SD.open("save.raw");
-#ifdef DEBUG
-        Serial.println("File opened.");
-#endif
-    }
-    if (audio_rec) {
-#ifdef DEBUG
-        Serial.println("Start sending audio file");
-#endif
-        while (audio_rec.available()) {
-            Bluetooth.println(audio_rec.read());
-        }
-#ifdef DEBUG
-        Serial.println("Finished");
-#endif
-        audio_rec.close();
-    }
-} */
 
 BleClass BLE = BleClass();
