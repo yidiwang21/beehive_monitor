@@ -38,19 +38,19 @@ void BleClass::sendAudiofile(void) {
     // Serial.print("str length = "); Serial.println(strlen(audio_str));
     Serial.print("File size: "); Serial.print(f.size()); Serial.println(" bytes");
 
-    byte byteBuf[SEND_BUFFER_SIZE];
-
     unsigned long cursorpos = 0;
     unsigned long ble_start_time = millis();
     aci_evt_opcode_t laststatus = ACI_EVT_DISCONNECTED;
     // BTLEserial.pollACI();
     
+    byte audio_byte[SEND_BUFFER_SIZE];
+    byte byteBuf[SEND_BUFFER_SIZE];
+
     // while(millis() - ble_start_time < 60000) {    // FIXME: set 60 secs for file transmision
     while (true) {
         // tell nRF8001 to process data
         BTLEserial.pollACI();
         aci_evt_opcode_t status = BTLEserial.getState();
-        
         if (status != laststatus) {
             if (status == ACI_EVT_DEVICE_STARTED)
                 Serial.println(F("* Advertising started"));
@@ -60,16 +60,10 @@ void BleClass::sendAudiofile(void) {
                 Serial.println(F("* Disconnected or advertising timed out"));
             laststatus = status;
         }
-
-        byte audio_byte[f.size()];
-        int i = 0;
-        while(f.available()) {
-            audio_byte[i] = f.read();
-            ++i;
-        }
-        i = 0;
+    
         // TODO: resuming transmision if disconnected
         if (status == ACI_EVT_CONNECTED) {
+            int i = 0;
             while(f.available()) {
                 BTLEserial.pollACI();
                 unsigned long tm_start = millis();
@@ -78,21 +72,20 @@ void BleClass::sendAudiofile(void) {
                 //     char c = BTLEserial.read();
                 //     if (c == 'y') break;
                 // }// ready to send, every 20 bytes
-                /* for (int i = 0; i < SEND_BUFFER_SIZE; i = i + 2) {
-                    byte msb = f.read();
-                    byte lsb = f.read();
-                    byteBuf[i] = msb; 
-                    byteBuf[i+1]  = lsb;
-                } */
+                f.read(byteBuf, SEND_BUFFER_SIZE);
                 // strcat((char*)byteBuf, &audio_byte[cursorpos]);
                 cursorpos += SEND_BUFFER_SIZE;
                 // Serial.print("cursorpos: "); Serial.println(cursorpos);
-                BTLEserial.write(&audio_byte[cursorpos], SEND_BUFFER_SIZE);
+                // BTLEserial.write(&audio_byte[cursorpos], SEND_BUFFER_SIZE);
+                BTLEserial.write(byteBuf, SEND_BUFFER_SIZE);
+                i++;
             }
             Serial.print("Total transmision time: "); Serial.println(millis() - ble_start_time);
+            Serial.println("Totle transmision bytes: "); Serial.println(i * SEND_BUFFER_SIZE);
             break;
         }
     }
+    delay(5000);
 }
 
 BleClass BLE = BleClass();
