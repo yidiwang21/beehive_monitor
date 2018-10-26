@@ -61,6 +61,13 @@ void BleClass::sendAudiofile(void) {
             laststatus = status;
         }
 
+        byte audio_byte[f.size()];
+        int i = 0;
+        while(f.available()) {
+            audio_byte[i] = f.read();
+            ++i;
+        }
+        i = 0;
         // TODO: resuming transmision if disconnected
         if (status == ACI_EVT_CONNECTED) {
             while(f.available()) {
@@ -71,16 +78,16 @@ void BleClass::sendAudiofile(void) {
                 //     char c = BTLEserial.read();
                 //     if (c == 'y') break;
                 // }// ready to send, every 20 bytes
-                for (int i = 0; i < SEND_BUFFER_SIZE; i = i + 2) {
+                /* for (int i = 0; i < SEND_BUFFER_SIZE; i = i + 2) {
                     byte msb = f.read();
                     byte lsb = f.read();
                     byteBuf[i] = msb; 
                     byteBuf[i+1]  = lsb;
-                }
-                // strcat((char*)byteBuf, audio_str + (i * SEND_BUFFER_SIZE));
+                } */
+                // strcat((char*)byteBuf, &audio_byte[cursorpos]);
                 cursorpos += SEND_BUFFER_SIZE;
                 // Serial.print("cursorpos: "); Serial.println(cursorpos);
-                BTLEserial.write(byteBuf, SEND_BUFFER_SIZE);
+                BTLEserial.write(&audio_byte[cursorpos], SEND_BUFFER_SIZE);
             }
             Serial.print("Total transmision time: "); Serial.println(millis() - ble_start_time);
             break;
