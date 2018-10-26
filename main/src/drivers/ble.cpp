@@ -18,7 +18,6 @@ BleClass::BleClass() {}
 void BleClass::_setup() {
     // Bluetooth.begin(9600);
     // Bluetooth.println("Hello Viewer!");
-    Serial.println("Setup BLE...");
     BTLEserial.begin();
 }
 
@@ -29,7 +28,7 @@ void BleClass::sendAudiofile(void) {
     if (SD.exists("save.raw"))
         f = SD.open("save.raw", FILE_READ);
     if (f == NULL)
-        errorHalt("ERROR: File is empty!");
+        errorHalt("* ERROR: File is empty!");
 
     // char *audio_str = (char*)malloc(AudioRecorder.STR_LENGTH * sizeof(char));
     // Serial.println(AudioRecorder.readRaw(f));
@@ -62,29 +61,25 @@ void BleClass::sendAudiofile(void) {
         }
     
         // TODO: resuming transmision if disconnected
+        // TODO: verify bytes transmitted
         if (status == ACI_EVT_CONNECTED) {
             int i = 0;
             while(f.available()) {
                 BTLEserial.pollACI();
                 unsigned long tm_start = millis();
-                // wait for "ready to send" signal from rpi
-                // while (BTLEserial.available()) {   // FIXME: 
-                //     char c = BTLEserial.read();
-                //     if (c == 'y') break;
-                // }// ready to send, every 20 bytes
                 f.read(byteBuf, SEND_BUFFER_SIZE);
                 // strcat((char*)byteBuf, &audio_byte[cursorpos]);
                 cursorpos += SEND_BUFFER_SIZE;
-                // Serial.print("cursorpos: "); Serial.println(cursorpos);
-                // BTLEserial.write(&audio_byte[cursorpos], SEND_BUFFER_SIZE);
+                // while(!BTLEserial.available());  // FIXME: 
                 BTLEserial.write(byteBuf, SEND_BUFFER_SIZE);
                 i++;
             }
-            Serial.print("Total transmision time: "); Serial.println(millis() - ble_start_time);
-            Serial.println("Totle transmision bytes: "); Serial.println(i * SEND_BUFFER_SIZE);
+            Serial.print("# Total transmision time: "); Serial.println(millis() - ble_start_time);
+            Serial.print("# Totle transmision bytes: "); Serial.println(i * SEND_BUFFER_SIZE);
             break;
         }
     }
+    f.close();
     delay(5000);
 }
 

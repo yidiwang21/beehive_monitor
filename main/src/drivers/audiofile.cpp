@@ -9,7 +9,7 @@
 #include "../../include.h"
 #include "audiofile.h"
 
-#define REC_TIME    5000
+#define REC_TIME    2000
 
 //************ Audio System Design **************
 AudioInputAnalog         audio_adc;   // using adc0 of Teensy 3.6
@@ -24,28 +24,26 @@ AudioClass::AudioClass() {
 
 void AudioClass::_setup(void) {
     delay(100);
-	Serial.println("Teensy Audio AudioMemory()");
+	Serial.println("# Teensy Audio AudioMemory()");
     AudioMemory(60);	// FIXME: ???
 }
 
 // TODO: not overwrite file every time, keep max 10 files 
 void AudioClass::startRecording(void) {
-    Serial.println("Start recording");
+    Serial.println("# Start recording");
     if (SD.exists("save.raw")) {
-    Serial.println("Remove existing file");
+    Serial.println("# Existing file removed");
         SD.remove("save.raw");
     }
     audio_rec = SD.open("save.raw", FILE_WRITE);
     if(audio_rec) {
-        Serial.println("File successfully opened");
         audio_queue.begin();
         recordingMode = 1;
     }
 }
 
-
 void AudioClass::stopRecording(void) {
-    Serial.println("Stop recording");
+    Serial.println("# Stop recording");
     audio_queue.end();
     if (recordingMode == 1) {
         while (audio_queue.available() > 0) {
@@ -82,10 +80,6 @@ void AudioClass::audioRecording(void) {
             break;
         }else continueRecording();
     }
-
-    if (SD.exists("save.raw"))
-        Serial.println("file exists");
-    else Serial.println("file does not exist");
 }
 
 /* char* AudioClass::readRaw(File f) {

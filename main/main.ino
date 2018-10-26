@@ -7,7 +7,7 @@
 SnoozeAlarm alarm;
 SnoozeBlock config_teensy36(alarm);
 
-#define DEBUG
+#define SLEEP_MODE_ENABLED
 
 #define SLEEP_TIME_HR	0
 #define SLEEP_TIME_MIN	10
@@ -22,7 +22,6 @@ void setup() {
 	_SD._setup();
 	AudioRecorder._setup();
 	Serial.println("**********************************************");
-	// startup indicator
 	for (int i = 0; i < 1; i++) {
 		digitalWrite(LED_BUILTIN, HIGH); delay(200);
 		digitalWrite(LED_BUILTIN, LOW); delay(200);
@@ -30,10 +29,15 @@ void setup() {
 }
 
 void loop() {
+#ifdef SLEEP_MODE_DEBUG
+	int who;
+	who = Snooze.hibernate(config_teensy36);	// get into sleep for 10 min until wakeup
+#else
 	int who = 35;
-	// who = Snooze.hibernate(config_teensy36);	// get into sleep for 10 min until wakeup
+#endif
 	if (who == 35){	// rtc wakeup value
 	// polling every 10 min
+		Serial.println("**********************************************");
 		AudioRecorder.audioRecording();
 		BLE.sendAudiofile();	
 	}
