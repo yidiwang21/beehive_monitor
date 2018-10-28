@@ -15,7 +15,10 @@
 #include <Snooze.h>
 #include "Adafruit_BLE_UART.h"
 
-#define DEBUG
+#define SLEEP_MODE_ENABLED
+// #define AUDIO_DEBUG
+// #define BLE_DEBUG
+
 
 #define errorHalt(msg) {Serial.println(F(msg)); while(1);}
 

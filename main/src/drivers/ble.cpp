@@ -2,11 +2,6 @@
 #include "audiofile.h"
 #include "../../include.h"
 
-// tried other rx tx pins, didn't work
-// #define BT_RX   9
-// #define BT_TX   10
-// SoftwareSerial Bluetooth(BT_RX, BT_TX);	// RX, TX
-
 #define ADAFRUITBLE_REQ 10
 #define ADAFRUITBLE_RDY 2
 #define ADAFRUITBLE_RST 9
@@ -38,14 +33,12 @@ void BleClass::sendAudiofile(void) {
     Serial.print("File size: "); Serial.print(f.size()); Serial.println(" bytes");
 
     unsigned long cursorpos = 0;
-    unsigned long ble_start_time = millis();
     aci_evt_opcode_t laststatus = ACI_EVT_DISCONNECTED;
     // BTLEserial.pollACI();
     
     byte audio_byte[SEND_BUFFER_SIZE];
     byte byteBuf[SEND_BUFFER_SIZE];
 
-    // while(millis() - ble_start_time < 60000) {    // FIXME: set 60 secs for file transmision
     while (true) {
         // tell nRF8001 to process data
         BTLEserial.pollACI();
@@ -61,16 +54,18 @@ void BleClass::sendAudiofile(void) {
         }
     
         // TODO: resuming transmision if disconnected
-        // TODO: verify bytes transmitted
         if (status == ACI_EVT_CONNECTED) {
             int i = 0;
+            Serial.println("# Start sending data...");
+            unsigned long ble_start_time = millis();
             while(f.available()) {
+#ifdef BLE_DEBUG
+                if(i > 10) break;
+#endif
                 BTLEserial.pollACI();
-                unsigned long tm_start = millis();
                 f.read(byteBuf, SEND_BUFFER_SIZE);
                 // strcat((char*)byteBuf, &audio_byte[cursorpos]);
                 cursorpos += SEND_BUFFER_SIZE;
-                // while(!BTLEserial.available());  // FIXME: 
                 BTLEserial.write(byteBuf, SEND_BUFFER_SIZE);
                 i++;
             }

@@ -7,7 +7,6 @@
 SnoozeAlarm alarm;
 SnoozeBlock config_teensy36(alarm);
 
-#define SLEEP_MODE_ENABLED
 
 #define SLEEP_TIME_HR	0
 #define SLEEP_TIME_MIN	10
@@ -29,7 +28,7 @@ void setup() {
 }
 
 void loop() {
-#ifdef SLEEP_MODE_DEBUG
+#ifndef SLEEP_MODE_ENABLED
 	int who;
 	who = Snooze.hibernate(config_teensy36);	// get into sleep for 10 min until wakeup
 #else
@@ -42,4 +41,5 @@ void loop() {
 		BLE.sendAudiofile();	
 	}
 	// TODO: sleep + running = 15 min
+	while(1);
 }
