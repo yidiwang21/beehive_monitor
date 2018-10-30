@@ -15,7 +15,8 @@ ble = Adafruit_BluefruitLE.get_provider()
 def main():
 #============================================================================
     # do it every "REPEAT_TIME" seconds
-    threading.Timer(REPEAT_TIME, main).start()
+    # threading.Timer(REPEAT_TIME, main).start()
+    
     # Clear any cached data because both bluez and CoreBluetooth have issues with
     # caching data and it going stale.
     ble.clear_cached_data()
