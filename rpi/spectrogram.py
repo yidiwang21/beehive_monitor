@@ -12,8 +12,8 @@ def get_spectrogram(file):
     wf = wave.open(file, 'rb')
     data = wf.readframes(-1)
     data = np.frombuffer(data, 'Int16')
-    data = data[1:len(data)/15]
     fs = wf.getframerate()
+    print("Sampling rate = ", fs)
 
     f, t, Sxx = signal.spectrogram(data, fs)
     return t, f, Sxx
