@@ -9,7 +9,7 @@ SnoozeBlock config_teensy36(alarm);
 
 
 #define SLEEP_TIME_HR	0
-#define SLEEP_TIME_MIN	10
+#define SLEEP_TIME_MIN	2
 #define SLEEP_TIME_SEC	0
 
 void setup() {
@@ -28,12 +28,14 @@ void setup() {
 }
 
 void loop() {
-#ifndef SLEEP_MODE_ENABLED
+#ifdef SLEEP_MODE_ENABLED
+	Serial.println("Entering sleeping mode...");
 	int who;
 	who = Snooze.hibernate(config_teensy36);	// get into sleep for 10 min until wakeup
 #else
 	int who = 35;
 #endif
+
 	if (who == 35){	// rtc wakeup value
 	// polling every 10 min
 		Serial.println("**********************************************");
@@ -41,5 +43,7 @@ void loop() {
 		BLE.sendAudiofile();	
 	}
 	// TODO: sleep + running = 15 min
+#ifndef SLEEP_MODE_ENABLED
 	while(1);
+#endif
 }
