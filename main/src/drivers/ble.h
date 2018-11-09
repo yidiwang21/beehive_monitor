@@ -4,8 +4,16 @@
 #include <SD.h>
 #include "Adafruit_BLE_UART.h"
 
-// need to convert the file to bytes, no more than 20 as defined 
+// 24MHz @ 22050 originally
+// 24MHz @ 11025 now
+#define SMALL_SAMPLE_RATE
 #define SEND_BUFFER_SIZE    20
+
+#if defined SMALL_SAMPLE_RATE
+#define READ_BUFFER_SIZE    40
+#else
+#define READ_BUFFER_SIZE    20
+#endif
 
 class BleClass
 {

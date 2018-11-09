@@ -9,8 +9,6 @@
 #include "../../include.h"
 #include "audiofile.h"
 
-#define REC_TIME    2000
-
 //************ Audio System Design **************
 AudioInputAnalog         audio_adc;   // using adc0 of Teensy 3.6
 AudioRecordQueue         audio_queue;

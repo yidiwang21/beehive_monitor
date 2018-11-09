@@ -36,8 +36,8 @@ void BleClass::sendAudiofile(void) {
     aci_evt_opcode_t laststatus = ACI_EVT_DISCONNECTED;
     // BTLEserial.pollACI();
     
-    byte audio_byte[SEND_BUFFER_SIZE];
-    byte byteBuf[SEND_BUFFER_SIZE];
+    byte byteBuf[READ_BUFFER_SIZE];
+    byte sendBuf[SEND_BUFFER_SIZE];
 
     while (true) {
         // tell nRF8001 to process data
@@ -59,15 +59,24 @@ void BleClass::sendAudiofile(void) {
             Serial.println("# Start sending data...");
             unsigned long ble_start_time = millis();
             while(f.available()) {
-#ifdef BLE_DEBUG
+            #ifdef BLE_DEBUG
                 if(i > 10) break;
-#endif
+            #endif
+            #ifndef SMALL_SAMPLE_RATE
                 BTLEserial.pollACI();
-                f.read(byteBuf, SEND_BUFFER_SIZE);
+                f.read(byteBuf, READ_BUFFER_SIZE);
                 // strcat((char*)byteBuf, &audio_byte[cursorpos]);
-                cursorpos += SEND_BUFFER_SIZE;
+                // cursorpos += SEND_BUFFER_SIZE;
                 BTLEserial.write(byteBuf, SEND_BUFFER_SIZE);
                 i++;
+            #else
+                BTLEserial.pollACI();
+                f.read(byteBuf, READ_BUFFER_SIZE);  // SEND_BUFFER_SIZE = 40
+                for (int j = 0; j < SEND_BUFFER_SIZE; j++)  // discarding half of the samples
+                    sendBuf[j] = byteBuf[2*j-1];
+                BTLEserial.write(byteBuf, SEND_BUFFER_SIZE);
+                i++;
+            #endif
             }
             Serial.print("# Total transmision time: "); Serial.println(millis() - ble_start_time);
             Serial.print("# Totle transmision bytes: "); Serial.println(i * SEND_BUFFER_SIZE);

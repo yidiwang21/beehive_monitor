@@ -7,6 +7,9 @@
 SnoozeAlarm alarm;
 SnoozeBlock config_teensy36(alarm);
 
+// #define SLEEP_MODE_ENABLED
+// #define AUDIO_DEBUG
+// #define BLE_DEBUG
 
 #define SLEEP_TIME_HR	0
 #define SLEEP_TIME_MIN	2
@@ -38,6 +41,10 @@ void loop() {
 
 	if (who == 35){	// rtc wakeup value
 	// polling every 10 min
+		for (int i = 0; i < 1; i++) {
+			digitalWrite(LED_BUILTIN, HIGH); delay(200);
+			digitalWrite(LED_BUILTIN, LOW); delay(200);
+		}
 		Serial.println("**********************************************");
 		AudioRecorder.audioRecording();
 		BLE.sendAudiofile();	

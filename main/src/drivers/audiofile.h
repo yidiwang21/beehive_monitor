@@ -18,6 +18,7 @@
 // #define AUDIO_DEBUG
 
 #define MAX_FILE_SIZE 10 * 1000 * 1000
+#define REC_TIME    2000
 
 class AudioClass
 {

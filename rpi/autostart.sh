@@ -9,7 +9,7 @@ while true; do
     # convert a raw file to a wav file:
     sudo chmod -R 777 input.raw
     echo "Converting raw file to wav..."
-    sox -t raw -b 16 -e signed-integer -r 22050 -c 2 input.raw output.wav
+    sox -t raw -b 16 -e signed-integer -r 11029 -c 2 input.raw output.wav   # 44117 / 4
 
     python spectrogram.py
     sleep 5
