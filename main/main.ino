@@ -5,21 +5,22 @@
 #include "src/drivers/sd.h"
 
 SnoozeAlarm alarm;
+// SnoozeTimer timer;
 SnoozeBlock config_teensy36(alarm);
+// SnoozeBlock config_teensy36(timer);
 
-// #define SLEEP_MODE_ENABLED
+#define SLEEP_MODE_ENABLED
 // #define AUDIO_DEBUG
 // #define BLE_DEBUG
 
 #define SLEEP_TIME_HR	0
-#define SLEEP_TIME_MIN	2
-#define SLEEP_TIME_SEC	0
+#define SLEEP_TIME_MIN	0
+#define SLEEP_TIME_SEC	30
 
 #define EX_LED_PIN		31
 
 void setup() {
 	pinMode(EX_LED_PIN, OUTPUT);
-	alarm.setRtcTimer(SLEEP_TIME_HR, SLEEP_TIME_MIN, SLEEP_TIME_SEC);	// hours, minutes, seconds
 	Serial.begin(9600);
 	BLE._setup();
 	// _ADC._setup();	// FIXME: conflict with audio pin
@@ -30,28 +31,30 @@ void setup() {
 		digitalWrite(EX_LED_PIN, HIGH); delay(200);
 		digitalWrite(EX_LED_PIN, LOW); delay(200);
     }
+	// timer.setTimer(10000);
+	alarm.setRtcTimer(SLEEP_TIME_HR, SLEEP_TIME_MIN, SLEEP_TIME_SEC);	// hours, minutes, seconds
 }
 
 void loop() {
-#ifdef SLEEP_MODE_ENABLED
+
+	delay(2000);
+	for (int i = 0; i < 1; i++) {
+		digitalWrite(EX_LED_PIN, HIGH); delay(500);
+		digitalWrite(EX_LED_PIN, LOW); delay(500);
+	}
+	Serial.println("**********************************************");
+	// FIXME: recording failed after sleep
+	AudioRecorder.audioRecording();
+	// BLE.sendAudiofile();	
+	delay(2000);
+
+	#ifdef SLEEP_MODE_ENABLED
 	Serial.println("Entering sleeping mode...");
-	int who;
-	who = Snooze.hibernate(config_teensy36);	// get into sleep for 10 min until wakeup
+	Snooze.hibernate(config_teensy36);	// get into sleep for 10 min until wakeup
 #else
 	int who = 35;
 #endif
 
-	if (who == 35){	// rtc wakeup value
-	// polling every 10 min
-		for (int i = 0; i < 1; i++) {
-			digitalWrite(EX_LED_PIN, HIGH); delay(200);
-			digitalWrite(EX_LED_PIN, LOW); delay(200);
-		}
-		Serial.println("**********************************************");
-		AudioRecorder.audioRecording();
-		BLE.sendAudiofile();	
-	}
-	// TODO: sleep + running = 15 min
 #ifndef SLEEP_MODE_ENABLED
 	while(1);
 #endif

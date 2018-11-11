@@ -42,6 +42,7 @@ void AudioClass::startRecording(void) {
 
 void AudioClass::stopRecording(void) {
     Serial.println("# Stop recording");
+    Serial.print("File size: "); Serial.print(audio_rec.size()); Serial.println(" bytes");
     audio_queue.end();
     if (recordingMode == 1) {
         while (audio_queue.available() > 0) {

@@ -30,7 +30,6 @@ void BleClass::sendAudiofile(void) {
     // strcpy(audio_str, AudioRecorder.readRaw(f));
     
     // Serial.print("str length = "); Serial.println(strlen(audio_str));
-    Serial.print("File size: "); Serial.print(f.size()); Serial.println(" bytes");
 
     unsigned long cursorpos = 0;
     aci_evt_opcode_t laststatus = ACI_EVT_DISCONNECTED;

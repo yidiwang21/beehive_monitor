@@ -1,9 +1,9 @@
 #!/bin/bash
 
-sleep 5
+sleep 2
 while true; do
     sudo python gateway.py
-    sleep 5
+    sleep 2
     killall python
 
     # convert a raw file to a wav file:
@@ -11,9 +11,9 @@ while true; do
     echo "Converting raw file to wav..."
     sox -t raw -b 16 -e signed-integer -r 10865 -c 2 input.raw output.wav   # 44117 / 4
 
-    python spectrogram.py
-    sleep 5
-    killall python
-    echo "Sleeping 10 minutes..."
+    # python spectrogram.py
+    # sleep 5
+    # killall python
+    echo "Sleeping 2 minutes..."
     sleep 2m
 done

@@ -14,7 +14,7 @@ def nextpow2(x):
     else:
         return 2 ** (x - 1).bit_length()
 
-file = "../bee_sounds/bee_swarm_small.wav"
+file = "sample/output.wav"
 
 wf = wave.open(file, 'rb')
 data = wf.readframes(-1)
@@ -31,7 +31,11 @@ f = np.arange(0, len(y)) * fs / len1
 
 plt.figure(1)
 plt.title('Waveform in Freq Domain')
-plt.plot(f[1:int(floor(len1/2))], y[1:int(floor(len1/2))])
+# plt.hist2d(y[1:int(floor(len1/2))], f[1:int(floor(len1/2))])
+plt.hist2d(y[1:int(floor(len1/2))], f[1:int(floor(len1/2))])
+cbar = plt.colorbar()
+cbar.ax.set_ylabel('Counts')
+# plt.plot(f[1:int(floor(len1/2))], y[1:int(floor(len1/2))])
 plt.xlabel('Frequency(Hz)')
 plt.ylabel('Amplitude')
 plt.show()
