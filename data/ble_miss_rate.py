@@ -1,9 +1,16 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+""" # send all the data
 delay_between_sends = np.array([10, 15, 18, 20, 35, 45])
 transmision_time = np.array([89.4, 132.9, 159.1, 176.6, 307.7, 398.1])
 miss_rate = np.array([56.1, 34, 20.8, 11.9, 0.3, 0])
+ """
+
+# send half of the data
+delay_between_sends = np.array([15, 20, 25, 30])
+transmision_time = np.array([67.04, 88.86, 110.83, 132.48])
+miss_rate = np.array([35.22, 12.9, 1.49, 1.01])
 
 
 fig, ax1 = plt.subplots()

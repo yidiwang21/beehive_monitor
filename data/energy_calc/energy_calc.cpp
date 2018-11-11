@@ -7,7 +7,7 @@ using namespace std;
 
 #define SLEEPING_CURRENT    0.056   // mA
 #define RUNNING_CURRENT     25      // mA
-#define RUNNING_UNIT_TIME   1.5     // sending 1s audio file needs 1.5min, neglecting recording time        
+#define RUNNING_UNIT_TIME   0.93    // sending 1s audio file needs 1.5min, neglecting recording time        
 
 int main(int argc, char *argv[]) {
     /* if (argc != 5) {
