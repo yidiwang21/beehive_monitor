@@ -5,9 +5,9 @@
 #include "src/drivers/sd.h"
 
 SnoozeAlarm alarm;
-// SnoozeTimer timer;
+//SnoozeTimer timer;
 SnoozeBlock config_teensy36(alarm);
-// SnoozeBlock config_teensy36(timer);
+//SnoozeBlock config_teensy36(timer);
 
 #define SLEEP_MODE_ENABLED
 // #define AUDIO_DEBUG
@@ -15,9 +15,16 @@ SnoozeBlock config_teensy36(alarm);
 
 #define SLEEP_TIME_HR	0
 #define SLEEP_TIME_MIN	0
-#define SLEEP_TIME_SEC	30
+#define SLEEP_TIME_SEC	20
 
 #define EX_LED_PIN		31
+
+void ledBlink(int cnt) {
+	for (int i = 0; i < cnt; i++) {
+		digitalWrite(EX_LED_PIN, HIGH); delay(500);
+		digitalWrite(EX_LED_PIN, LOW); delay(500);
+    }
+}
 
 void setup() {
 	pinMode(EX_LED_PIN, OUTPUT);
@@ -27,30 +34,36 @@ void setup() {
 	_SD._setup();
 	AudioRecorder._setup();
 	Serial.println("**********************************************");
-	for (int i = 0; i < 1; i++) {
-		digitalWrite(EX_LED_PIN, HIGH); delay(200);
-		digitalWrite(EX_LED_PIN, LOW); delay(200);
-    }
-	// timer.setTimer(10000);
+	ledBlink(2);
+	//timer.setTimer(30000);
 	alarm.setRtcTimer(SLEEP_TIME_HR, SLEEP_TIME_MIN, SLEEP_TIME_SEC);	// hours, minutes, seconds
 }
 
+// TODO: 
+// assign audio objects in the loop, however, queue will generate interrupts
+// try to use AudioNoInterrupts() to avoid it; and AudioInterrupts() to re-enable
 void loop() {
-
-	delay(2000);
-	for (int i = 0; i < 1; i++) {
-		digitalWrite(EX_LED_PIN, HIGH); delay(500);
-		digitalWrite(EX_LED_PIN, LOW); delay(500);
-	}
-	Serial.println("**********************************************");
-	// FIXME: recording failed after sleep
-	AudioRecorder.audioRecording();
+	SIM_SCGC6 &= ~SIM_SCGC6_I2S;
+  int who;
+  who = Snooze.deepSleep(config_teensy36);  // get into sleep for 10 min until wakeup
+  SIM_SCGC6 |= SIM_SCGC6_I2S;
+	
+	//
+	if (who == 35) {
+	  Serial.println("**********************************************");
+    delay(8000);
+//     I2S0_TCSR |= I2S_TCSR_TE;
+//     I2S0_RCSR |= I2S_RCSR_RE;
+		ledBlink(1);
+		AudioRecorder.audioRecording();
+    	delay(1000);
+  
 	// BLE.sendAudiofile();	
-	delay(2000);
+	}
 
 	#ifdef SLEEP_MODE_ENABLED
 	Serial.println("Entering sleeping mode...");
-	Snooze.hibernate(config_teensy36);	// get into sleep for 10 min until wakeup
+	
 #else
 	int who = 35;
 #endif

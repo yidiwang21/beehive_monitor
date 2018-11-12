@@ -23,24 +23,27 @@ AudioClass::AudioClass() {
 void AudioClass::_setup(void) {
     delay(100);
 	Serial.println("# Teensy Audio AudioMemory()");
-    AudioMemory(60);	// FIXME: ???
+    AudioMemory(60);
 }
 
 // TODO: not overwrite file every time, keep max 10 files 
 void AudioClass::startRecording(void) {
-    Serial.println("# Start recording");
+    // audio_queue.update();
     if (SD.exists("save.raw")) {
     Serial.println("# Existing file removed");
         SD.remove("save.raw");
     }
     audio_rec = SD.open("save.raw", FILE_WRITE);
     if(audio_rec) {
+        Serial.println("# Start recording");
+        Serial.print("# Queue available ?"); Serial.println(audio_queue.available());
         audio_queue.begin();
         recordingMode = 1;
     }
 }
 
 void AudioClass::stopRecording(void) {
+    // NP
     Serial.println("# Stop recording");
     Serial.print("File size: "); Serial.print(audio_rec.size()); Serial.println(" bytes");
     audio_queue.end();
@@ -51,6 +54,7 @@ void AudioClass::stopRecording(void) {
         }
         audio_rec.close();
     }
+    // audio_queue.clear();
     recordingMode = 0;
 }
 
@@ -73,12 +77,11 @@ void AudioClass::continueRecording(void) {
 void AudioClass::audioRecording(void) {
     startRecording();
     unsigned long time = millis();
-    while (true) {
-        if(millis() - time > REC_TIME && recordingMode == 1) {
-            stopRecording();
-            break;
-        }else continueRecording();
+    while (millis() - time < REC_TIME) {
+        // NP
+        continueRecording();
     }
+    stopRecording();
 }
 
 /* char* AudioClass::readRaw(File f) {

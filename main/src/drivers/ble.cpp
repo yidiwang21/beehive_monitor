@@ -13,6 +13,7 @@ BleClass::BleClass() {}
 void BleClass::_setup() {
     // Bluetooth.begin(9600);
     // Bluetooth.println("Hello Viewer!");
+    Serial.println("# Initializing BLE...");
     BTLEserial.begin();
 }
 

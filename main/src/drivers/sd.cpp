@@ -10,14 +10,12 @@ SdClass::SdClass() {}
 void SdClass::_setup(void) {
 	// SPI.setMOSI(SDCARD_MOSI_PIN);
 	// SPI.setSCK(SDCARD_SCK_PIN);
-	if (!(SD.begin(SDCARD_CS_PIN))) {	// stop here if no SD card, but print a message
-    	while (true) {
-      		Serial.println("Unable to access the SD card!");
-			delay(200);
-    	}
-  	}else{
-  		Serial.println("Successfully access the SD card!");
-    }
+	Serial.println("# Initializing SD card...");
+	while (!(SD.begin(SDCARD_CS_PIN))) {
+		Serial.println("Unable to access SD card!");
+		delay(200);
+	}
+	Serial.println("Successfully access the SD card!");
 }
 
 SdClass _SD = SdClass();
