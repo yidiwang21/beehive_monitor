@@ -3,10 +3,12 @@
 #include "src/drivers/ble.h"
 #include "src/adc/adc.h"  
 #include "src/drivers/sd.h"
+#include "src/drivers/pdb.h"
 
 SnoozeAlarm alarm;
+SnoozeAudio audio;
 //SnoozeTimer timer;
-SnoozeBlock config_teensy36(alarm);
+SnoozeBlock config_teensy36(alarm, audio);
 //SnoozeBlock config_teensy36(timer);
 
 #define SLEEP_MODE_ENABLED
@@ -29,6 +31,7 @@ void ledBlink(int cnt) {
 void setup() {
 	pinMode(EX_LED_PIN, OUTPUT);
 	Serial.begin(9600);
+	PDB_setup();
 	BLE._setup();
 	// _ADC._setup();	// FIXME: conflict with audio pin
 	_SD._setup();
@@ -43,17 +46,20 @@ void setup() {
 // assign audio objects in the loop, however, queue will generate interrupts
 // try to use AudioNoInterrupts() to avoid it; and AudioInterrupts() to re-enable
 void loop() {
-	SIM_SCGC6 &= ~SIM_SCGC6_I2S;
-  int who;
-  who = Snooze.deepSleep(config_teensy36);  // get into sleep for 10 min until wakeup
-  SIM_SCGC6 |= SIM_SCGC6_I2S;
+	disablePDB();
+	// SIM_SCGC6 &= ~SIM_SCGC6_I2S;
+  	int who;
+  	who = Snooze.deepSleep(config_teensy36);  // get into sleep for 10 min until wakeup
+  	// SIM_SCGC6 |= SIM_SCGC6_I2S;
 	
 	//
 	if (who == 35) {
-	  Serial.println("**********************************************");
-    delay(8000);
-//     I2S0_TCSR |= I2S_TCSR_TE;
-//     I2S0_RCSR |= I2S_RCSR_RE;
+	  	Serial.println("**********************************************");
+    	delay(1000);
+		// TODO: testing
+		PDB_setup();
+		enablePDB();
+		
 		ledBlink(1);
 		AudioRecorder.audioRecording();
     	delay(1000);
