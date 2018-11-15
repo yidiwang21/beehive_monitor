@@ -7,8 +7,9 @@
 
 SnoozeAlarm alarm;
 SnoozeAudio audio;
+SnoozeSPI	sdcard;
 //SnoozeTimer timer;
-SnoozeBlock config_teensy36(alarm, audio);
+SnoozeBlock config_teensy36(alarm, audio, sdcard);
 //SnoozeBlock config_teensy36(timer);
 
 #define SLEEP_MODE_ENABLED
@@ -31,7 +32,6 @@ void ledBlink(int cnt) {
 void setup() {
 	pinMode(EX_LED_PIN, OUTPUT);
 	Serial.begin(9600);
-	PDB_setup();
 	BLE._setup();
 	// _ADC._setup();	// FIXME: conflict with audio pin
 	_SD._setup();
@@ -40,13 +40,14 @@ void setup() {
 	ledBlink(2);
 	//timer.setTimer(30000);
 	alarm.setRtcTimer(SLEEP_TIME_HR, SLEEP_TIME_MIN, SLEEP_TIME_SEC);	// hours, minutes, seconds
+	audio.usingADC(16);
+	sdcard.spiClockPin(SDCARD_CS_PIN);
 }
 
 // TODO: 
 // assign audio objects in the loop, however, queue will generate interrupts
 // try to use AudioNoInterrupts() to avoid it; and AudioInterrupts() to re-enable
 void loop() {
-	disablePDB();
 	// SIM_SCGC6 &= ~SIM_SCGC6_I2S;
   	int who;
   	who = Snooze.deepSleep(config_teensy36);  // get into sleep for 10 min until wakeup
@@ -56,10 +57,6 @@ void loop() {
 	if (who == 35) {
 	  	Serial.println("**********************************************");
     	delay(1000);
-		// TODO: testing
-		PDB_setup();
-		enablePDB();
-		
 		ledBlink(1);
 		AudioRecorder.audioRecording();
     	delay(1000);
